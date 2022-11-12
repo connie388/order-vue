@@ -1,0 +1,55 @@
+ <template>
+    <ul>
+        <li
+          class="className"
+          :class="{ active: index == this.currentIndex }"
+          v-for="(option, index) in options || []"
+          :key="index"
+          @click="onclick(option,index)"
+        >
+          <p>{{ option }}</p>
+        </li>
+      </ul>
+</template>
+
+
+<script>
+export default {
+  name: "BaseList",
+  props: {
+    options: {
+      type: Array,
+      required: true,
+    },
+    className: {
+      type: String,
+      default: "",
+    },
+    resetIndex: {
+        type:Boolean,
+        default: true,
+    }
+  },
+  data() {
+    return {
+      currentIndex: -1,
+    };
+  },
+  methods: {
+    onclick(option,index) {
+      this.currentIndex = index;
+      this.$emit("onclick", option );
+    },
+  },
+  created() {
+    // watch the props to fetch the data again
+    this.$watch(
+      () => this.resetIndex,
+      () => {
+        this.currentIndex=-1;
+      },
+      { immediate: true }
+    );
+  },
+};
+</script>

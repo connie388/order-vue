@@ -4,11 +4,14 @@ const BASE_URL = "http://localhost:8080/thezone/";
 
 export const ENDPOINTS = {
   PRODUCTLINE: "productline",
+  PRODUCT: "product",
 };
 export const createEndpoint = (endpoint) => {
   let url = BASE_URL + endpoint + "/";
   return {
     fetchAll: () => axios.get(url),
+    fetchAllByCategory: (category) =>
+      axios.get(BASE_URL + category + "/" + endpoint),
     fetchById: (id) => axios.get(url + id),
     create: (newRecord) => axios.post(url, newRecord),
     update: (id, updateRecord) => axios.put(url + id, updateRecord),

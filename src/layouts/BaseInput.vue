@@ -7,7 +7,9 @@
     :type="type"
     :value="modelValue"
     @input="updateInput"
+    @change="onchange"
     :class="className"
+    :disabled="disabled"
   />
 </template>
 
@@ -35,10 +37,19 @@ export default {
       type: String,
       default: "border w-full my-2",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    }
   },
+
   methods: {
     updateInput(event) {
       this.$emit("update:modelValue", event.target.value);
+    },
+
+    onchange(event) {
+      this.$emit("onchange", event.target.value);
     },
   },
 };

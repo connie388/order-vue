@@ -32,11 +32,19 @@
       >
        
         <router-link
+          @click="setClick('/productline')"
+          :class=" {active: currentLink === '/productline'}"
           class="text-gray-100 hover:text-indigo-400"
           to="/productline"
           >Product Line</router-link
         >
-  
+        <router-link
+          @click="setClick('/product')"
+          :class=" {active: currentLink === '/product'}"
+          class="text-gray-100 hover:text-indigo-400"
+          to="/product"
+          >Product</router-link
+        >
       </ul>
     </nav>
   </div>
@@ -44,10 +52,20 @@
 <script>
 import { ref } from "vue";
 export default {
+  data() {
+    return {
+      currentLink: "/",
+    }
+  },
   setup() {
     let showMenu = ref(false);
     const toggleNav = () => (showMenu.value = !showMenu.value);
     return { showMenu, toggleNav };
+  },
+  methods: {
+    setClick(link) {
+      this.currentLink = link;
+    }
   },
 };
 </script>

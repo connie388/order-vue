@@ -8,6 +8,11 @@ const routes = [
     component: () => import("../components/ProductLineList.vue"),
   },
   {
+    path: "/product",
+    name: "ProductList",
+    component: () => import("../components/ProductList.vue"),
+  },
+  {
     path: "/:catchAll(.*)*",
     name: "PageNotFound",
     component: PageNotFound,

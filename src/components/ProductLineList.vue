@@ -5,7 +5,7 @@
         label="Product Line List"
         class="font-bold block text-4xl text-start"
       />
-      <ul>
+      <!-- <ul>
         <li
           class="list-group-item"
           :class="{ active: index == currentIndex }"
@@ -15,12 +15,18 @@
         >
           <p>{{ productline.productLine }}</p>
         </li>
-      </ul>
+      </ul> -->
 
-      <button
+  <BaseList  :options="productlines" @onclick="setActiveProductLine" />
+
+      <!-- <button
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         @click="setNewRecord"
-        >Add</button>
+        >Add</button> -->
+      <BaseButton
+      @click="setNewRecord"
+      label="Add"
+      />
     </div>
     <div class="w-3/4">
     <div>
@@ -28,13 +34,14 @@
       </div>
       <div v-if="newRecord">
         <BaseHeader label="New Product Line" />
-        <ProductLineForm @onsubmit="addProductLineData"/>
+        <ProductLineForm  @onsubmit="addProductLineData"/>
       </div>
       <div v-else-if="currentProductLine" class="flex flex-row">
         <div class="w-11/12">
           <BaseHeader label="Update Product Line" />
           <ProductLineForm
-            :pline="currentProductLine.productLine"
+            :disabled=true
+            :pline="currentProductLine"
             @onsubmit="updateProductLineData"
           />
         </div>
@@ -52,18 +59,21 @@
 
 <script>
 import BaseHeader from "../layouts/BaseHeader.vue";
+import BaseButton from "../layouts/BaseButton.vue";
 import ProductLineForm from "./ProductLineForm";
+import BaseList from "../layouts/BaseList.vue";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 export default {
   components: {
     BaseHeader,
+    BaseButton,
+    BaseList,
     ProductLineForm,
   },
   data() {
     return {
       productlines: [],
       currentProductLine: null,
-      currentIndex: -1,
       newRecord: false,
       msg: "Please click on a Product Line to view, update or delete",
     };
@@ -73,9 +83,8 @@ export default {
     this.retrieveProductLines();
   },
   methods: {
-    setActiveProductLine(productline, index) {
+    setActiveProductLine(productline) {
       this.currentProductLine = productline;
-      this.currentIndex = productline ? index : -1;
       this.msg = "";
       this.newRecord = false;
     },
@@ -84,26 +93,27 @@ export default {
        this.newRecord = true;
        this.msg = "";
       this.currentProductLine= null;
-      this.currentIndex= -1;
     },
 
     retrieveProductLines() {
+      this.productlines=[];
       createEndpoint(ENDPOINTS.PRODUCTLINE)
         .fetchAll()
         .then((res) => {
-          this.productlines = res.data;
+          for (let record in res.data) {
+            this.productlines.push(res.data[record].productLine);
+          }   
         })
         .catch((err) => console.log(err));
     },
 
     deleteProductLine() {
       createEndpoint(ENDPOINTS.PRODUCTLINE)
-        .delete(this.currentProductLine.productLine)
+        .delete(this.currentProductLine)
         .then((res) => {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
           this.currentProductLine= null;
-          this.currentIndex= -1,
           this.retrieveProductLines();
         })
         .catch((err) => console.log(err));
@@ -114,7 +124,7 @@ export default {
         productLine: form.productLine,
         textDesc: form.textDesc,
         htmlDesc: form.htmlDesc,
-        image: form.image,
+        imageUrl: form.imageUrl,
       };
       createEndpoint(ENDPOINTS.PRODUCTLINE)
         .update(form.productLine, data)
@@ -130,9 +140,9 @@ export default {
         productLine: form.productLine,
         textDesc: form.textDesc,
         htmlDesc: form.htmlDesc,
-        image: form.image,
+        imageUrl: form.imageUrl,
       };
-
+      console.log(data);
       createEndpoint(ENDPOINTS.PRODUCTLINE)
         .create(data)
         .then((res) => {
