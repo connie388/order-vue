@@ -7,7 +7,6 @@
     :type="type"
     :value="modelValue"
     @input="updateInput"
-    @change="onchange"
     :class="className"
     :disabled="disabled"
   />
@@ -46,10 +45,6 @@ export default {
   methods: {
     updateInput(event) {
       this.$emit("update:modelValue", event.target.value);
-    },
-
-    onchange(event) {
-      this.$emit("onchange", event.target.value);
     },
   },
 };

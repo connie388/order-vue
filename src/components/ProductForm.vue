@@ -2,22 +2,31 @@
   <form @submit.prevent>
     <p v-if="errors.length">
     <b>Please correct the following error(s):</b>
-    <ul>
+    <ul class="text-red-500">
       <li v-bind:key="error" v-for="error in errors">{{ error }}</li>
     </ul>
   </p>
 
-  <BaseInput
+  <div v-if="edit">
+    <BaseInput
       id="productLine"
       label="Product Line"
-      :disabled = "disabled"
+      :disabled = "edit"
       v-model="form.productLine"
     />
-
+  </div>
+  <div v-else>
+    <BaseDropdown
+      id="productLine"
+       :options="productlines" 
+      label="Product Line"
+      @selected="setFormProductLine"
+    />
+   </div>
     <BaseInput
       id="productCode"
       label="Product Code"
-      :disabled = "disabled"
+      :disabled = "edit"
       v-model="form.productCode"
     />
 
@@ -70,16 +79,18 @@
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 import BaseInput from "../layouts/BaseInput.vue";
 import BaseButton from "../layouts/BaseButton.vue";
+import BaseDropdown from "../layouts/BaseDropdown.vue";
 import BaseTextArea from "../layouts/BaseTextArea.vue";
 
 export default {
   emits: ["onsubmit"],
   components: {
     BaseInput,
+    BaseDropdown,
     BaseButton,
     BaseTextArea,
   },
-  props: ["productCode", "disabled"],
+  props: ["productCode", "edit", "productlines"],
   data() {
     return {
       form: {
@@ -134,28 +145,31 @@ created() {
        } if (!this.form.quantityInStock) {
         this.errors.push('Quantity In Stock required.');
       }
-      // if (this.form.imageUrl && !this.validImageURL(this.form.imageUrl)) {
-      //   this.errors.push('Image URL is invalid.');
-      // }
+      if (this.form.productCode?.length > 15) {
+        this.errors.push('Product Code should be less than or equal to 15 characters');
+      }
+      if (this.form.productScale?.length > 10) {
+        this.errors.push('Product Scale should be less than or equal to 10 characters');
+      }
 
       if (this.errors.length) {
         return;
       }
 
-      e.preventDefault();     
+      e.preventDefault();   
       this.$emit("onsubmit", this.form);
     },
 
-    // validImageURL: function (imageURL) {
-    //   var re = /^(https?:\/\/)?[0-9a-zA-Z]+\.[-_0-9a-zA-Z]+\.[0-9a-zA-Z]+$/;
-    //   return re.test(imageURL);
-    // },
+    setFormProductLine(option) {
+      this.form.productLine=option;
+    },
 
     getProduct() {
       createEndpoint(ENDPOINTS.PRODUCT)
         .fetchById(this.productCode)
         .then((res) => {
           this.form.productLine = res.data.productLine;
+          this.form.selectedOption = res.data.productLine;
           this.form.productCode = res.data.productCode;
           this.form.productName = res.data.productName;
           this.form.productScale = res.data.productScale;

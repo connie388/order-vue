@@ -31,13 +31,14 @@
       </div>
       <div v-if="newRecord">
         <BaseHeader label="New Product" />
-        <ProductForm  @onsubmit="addProductData"/>
+        <ProductForm  :productlines="productlines" @onsubmit="addProductData"/>
       </div>
       <div v-else-if="currentProductCode" class="flex flex-row">
         <div class="w-11/12">
           <BaseHeader label="Update Product" />
           <ProductForm
-            :disabled=true
+           :productlines="productlines"
+            :edit=true
             :productCode="currentProductCode"
             @onsubmit="updateProductData"
           />
@@ -109,15 +110,6 @@ export default {
       this.currentIndex= -1;
     },
 
-    // retrieveProducts() {
-    //   createEndpoint(ENDPOINTS.PRODUCT)
-    //     .fetchAll()
-    //     .then((res) => {
-    //       this.products = res.data;
-    //     })
-    //     .catch((err) => console.log(err));
-    // },
-
     searchByProductLine(option) {
         this.products=[];
         this.searchProductLine = option;
@@ -125,7 +117,6 @@ export default {
         createEndpoint(ENDPOINTS.PRODUCT)
         .fetchAllByCategory(option)
         .then((res) => {
-          // this.products = res.data;
            for (let record in res.data) {
             this.products.push(res.data[record].productCode);
           }   
@@ -179,7 +170,7 @@ export default {
         buyPrice: form.buyPrice,
         msrp: form.msrp,
       };
-      console.log(data);
+    
       createEndpoint(ENDPOINTS.PRODUCT)
         .create(data)
         .then((res) => {

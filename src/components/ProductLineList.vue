@@ -5,28 +5,8 @@
         label="Product Line List"
         class="font-bold block text-4xl text-start"
       />
-      <!-- <ul>
-        <li
-          class="list-group-item"
-          :class="{ active: index == currentIndex }"
-          v-for="(productline, index) in productlines || []"
-          :key="index"
-          v-on:click="setActiveProductLine(productline, index)"
-        >
-          <p>{{ productline.productLine }}</p>
-        </li>
-      </ul> -->
-
-  <BaseList  :options="productlines" @onclick="setActiveProductLine" />
-
-      <!-- <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        @click="setNewRecord"
-        >Add</button> -->
-      <BaseButton
-      @click="setNewRecord"
-      label="Add"
-      />
+      <BaseList  :options="productlines" @onclick="setActiveProductLine" />
+      <BaseButton @click="setNewRecord" label="Add" />
     </div>
     <div class="w-3/4">
     <div>
@@ -51,8 +31,7 @@
             @click="deleteProductLine"
           ></i>
         </div>
-      </div>
-      
+      </div>     
     </div>
   </div>
 </template>
@@ -135,14 +114,14 @@ export default {
         .catch((err) => console.log(err));
     },
 
-     addProductLineData(form) {
+    addProductLineData(form) {
       var data = {
         productLine: form.productLine,
         textDesc: form.textDesc,
         htmlDesc: form.htmlDesc,
         imageUrl: form.imageUrl,
       };
-      console.log(data);
+
       createEndpoint(ENDPOINTS.PRODUCTLINE)
         .create(data)
         .then((res) => {

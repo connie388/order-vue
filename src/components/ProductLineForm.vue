@@ -1,11 +1,11 @@
 <template>
   <form @submit.prevent>
     <p v-if="errors.length">
-    <b>Please correct the following error(s):</b>
-    <ul>
-      <li v-bind:key="error" v-for="error in errors">{{ error }}</li>
-    </ul>
-  </p>
+      <b>Please correct the following error(s):</b>
+      <ul>
+        <li v-bind:key="error" v-for="error in errors">{{ error }}</li>
+     </ul>
+    </p>
 
     <BaseInput
       id="productLine"
@@ -28,19 +28,9 @@
 
     <BaseInput id="image" label="Image URL" v-model="form.imageUrl"/>
 
-
     <img class="object-cover h-48 w-96"  :src="form.imageUrl" alt="Product Line img">
 
-    <!-- <button
-      class="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      @click="onsubmit"
-    >
-      Submit
-    </button> -->
-    <BaseButton
-    @click="onsubmit"
-    label="Submit"
-    />
+    <BaseButton @click="onsubmit" label="Submit" />
   </form>
 </template>
 <script>
@@ -69,7 +59,7 @@ export default {
     };
   },
 
-created() {
+  created() {
     // watch the props to fetch the data again
     this.$watch(
       () => this.pline,
@@ -88,22 +78,12 @@ created() {
        if (!this.form.productLine) {
         this.errors.push('Product Line required.');
       }
-      // if (this.form.imageUrl && !this.validImageURL(this.form.imageUrl)) {
-      //   this.errors.push('Image URL is invalid.');
-      // }
-
       if (this.errors.length) {
         return;
       }
-
       e.preventDefault();     
       this.$emit("onsubmit", this.form);
     },
-
-    // validImageURL: function (imageURL) {
-    //   var re = /^(https?:\/\/)?[0-9a-zA-Z]+\.[-_0-9a-zA-Z]+\.[0-9a-zA-Z]+$/;
-    //   return re.test(imageURL);
-    // },
 
     getProductLine() {
       createEndpoint(ENDPOINTS.PRODUCTLINE)

@@ -16,6 +16,7 @@
 <script>
 export default {
   name: "BaseList",
+  emits: ['onclick'],
   props: {
     options: {
       type: Array,
