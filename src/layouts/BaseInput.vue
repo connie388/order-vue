@@ -1,5 +1,5 @@
 <template>
-  <label v-if="label" :for="id" class="font-bold block my-2">
+  <label v-if="label" :for="id" :class="labelClass">
     {{ label }}
   </label>
   <input
@@ -16,6 +16,10 @@
 export default {
   name: "BaseInput",
   props: {
+    labelClass: {
+      type: String,
+      default: "font-bold block my-2",
+    },
     id: {
       type: String,
       default: "",

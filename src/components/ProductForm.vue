@@ -113,7 +113,7 @@ created() {
     this.$watch(
       () => this.productCode,
       () => {
-        this.getProduct();
+        if (this.productCode) this.getProduct();
       },
       // fetch the data when the view is created and the data is
       // already being observed

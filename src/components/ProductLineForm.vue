@@ -64,7 +64,7 @@ export default {
     this.$watch(
       () => this.pline,
       () => {
-        this.getProductLine();
+        if (this.pline) this.getProductLine();
       },
       // fetch the data when the view is created and the data is
       // already being observed
@@ -75,7 +75,7 @@ export default {
   methods: {
     onsubmit(e) {
       this.errors = [];
-       if (!this.form.productLine) {
+      if (!this.form.productLine) {
         this.errors.push('Product Line required.');
       }
       if (this.errors.length) {

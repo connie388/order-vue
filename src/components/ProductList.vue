@@ -11,17 +11,6 @@
         label="Product List"
         class="mt-10 font-bold block text-4xl text-start"
       />
-      <!-- <ul>
-        <li
-          class="list-group-item"
-          :class="{ active: index == currentIndex }"
-          v-for="(product, index) in products || []"
-          :key="index"
-          v-on:click="setActiveProduct(product, index)"
-        >
-          <p>{{ product.productCode }}</p>
-        </li>
-      </ul> -->
       <BaseList :resetIndex="reset" :options="products" @onclick="setActiveProduct" />
       <BaseButton @click="setNewRecord" label="Add"/>
     </div>
@@ -118,7 +107,9 @@ export default {
         .fetchAllByCategory(option)
         .then((res) => {
            for (let record in res.data) {
-            this.products.push(res.data[record].productCode);
+             var tempProduct = {"key": res.data[record].productCode,  
+                            "text": res.data[record].productCode};
+            this.products.push(tempProduct);
           }   
         })
         .catch((err) => console.log(err));

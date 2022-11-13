@@ -45,6 +45,13 @@
           to="/product"
           >Product</router-link
         >
+        <router-link
+          @click="setClick('/customer')"
+          :class=" {active: currentLink === '/customer'}"
+          class="text-gray-100 hover:text-indigo-400"
+          to="/customer"
+          >Customer</router-link
+        >
       </ul>
     </nav>
   </div>

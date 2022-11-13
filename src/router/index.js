@@ -13,6 +13,11 @@ const routes = [
     component: () => import("../components/ProductList.vue"),
   },
   {
+    path: "/customer",
+    name: "CustomerList",
+    component: () => import("../components/CustomerList.vue"),
+  },
+  {
     path: "/:catchAll(.*)*",
     name: "PageNotFound",
     component: PageNotFound,

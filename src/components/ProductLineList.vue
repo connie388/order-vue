@@ -61,6 +61,7 @@ export default {
   mounted() {
     this.retrieveProductLines();
   },
+  
   methods: {
     setActiveProductLine(productline) {
       this.currentProductLine = productline;
@@ -80,7 +81,9 @@ export default {
         .fetchAll()
         .then((res) => {
           for (let record in res.data) {
-            this.productlines.push(res.data[record].productLine);
+             var tempProductLine = {"key": res.data[record].productLine,  
+                            "text": res.data[record].productLine};
+            this.productlines.push(tempProductLine);
           }   
         })
         .catch((err) => console.log(err));
