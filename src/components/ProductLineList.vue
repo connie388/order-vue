@@ -5,22 +5,22 @@
         label="Product Line List"
         class="font-bold block text-4xl text-start"
       />
-      <BaseList  :options="productlines" @onclick="setActiveProductLine" />
+      <BaseList :options="productlines" @onclick="setActiveProductLine" />
       <BaseButton @click="setNewRecord" label="Add" />
     </div>
     <div class="w-3/4">
-    <div>
-        <p>{{msg}}</p>
+      <div>
+        <p>{{ msg }}</p>
       </div>
       <div v-if="newRecord">
         <BaseHeader label="New Product Line" />
-        <ProductLineForm  @onsubmit="addProductLineData"/>
+        <ProductLineForm @onsubmit="addProductLineData" />
       </div>
       <div v-else-if="currentProductLine" class="flex flex-row">
         <div class="w-11/12">
           <BaseHeader label="Update Product Line" />
           <ProductLineForm
-            :disabled=true
+            :disabled="true"
             :pline="currentProductLine"
             @onsubmit="updateProductLineData"
           />
@@ -31,7 +31,7 @@
             @click="deleteProductLine"
           ></i>
         </div>
-      </div>     
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +61,7 @@ export default {
   mounted() {
     this.retrieveProductLines();
   },
-  
+
   methods: {
     setActiveProductLine(productline) {
       this.currentProductLine = productline;
@@ -70,21 +70,23 @@ export default {
     },
 
     setNewRecord() {
-       this.newRecord = true;
-       this.msg = "";
-      this.currentProductLine= null;
+      this.newRecord = true;
+      this.msg = "";
+      this.currentProductLine = null;
     },
 
     retrieveProductLines() {
-      this.productlines=[];
+      this.productlines = [];
       createEndpoint(ENDPOINTS.PRODUCTLINE)
         .fetchAll()
         .then((res) => {
           for (let record in res.data) {
-             var tempProductLine = {"key": res.data[record].productLine,  
-                            "text": res.data[record].productLine};
+            var tempProductLine = {
+              key: res.data[record].productLine,
+              text: res.data[record].productLine,
+            };
             this.productlines.push(tempProductLine);
-          }   
+          }
         })
         .catch((err) => console.log(err));
     },
@@ -95,7 +97,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
-          this.currentProductLine= null;
+          this.currentProductLine = null;
           this.retrieveProductLines();
         })
         .catch((err) => console.log(err));
@@ -112,7 +114,7 @@ export default {
         .update(form.productLine, data)
         .then((res) => {
           console.log(res.data);
-          this.msg = "Record updated successfully!"
+          this.msg = "Record updated successfully!";
         })
         .catch((err) => console.log(err));
     },
@@ -130,7 +132,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.retrieveProductLines();
-          this.msg = "Record added successfully!"
+          this.msg = "Record added successfully!";
           this.newRecord = false;
         })
         .catch((err) => console.log(err));

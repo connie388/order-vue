@@ -11,23 +11,27 @@
         label="Product List"
         class="mt-10 font-bold block text-4xl text-start"
       />
-      <BaseList :resetIndex="reset" :options="products" @onclick="setActiveProduct" />
-      <BaseButton @click="setNewRecord" label="Add"/>
+      <BaseList
+        :resetIndex="reset"
+        :options="products"
+        @onclick="setActiveProduct"
+      />
+      <BaseButton @click="setNewRecord" label="Add" />
     </div>
     <div class="w-3/4">
-    <div>
-        <p>{{msg}}</p>
+      <div>
+        <p>{{ msg }}</p>
       </div>
       <div v-if="newRecord">
         <BaseHeader label="New Product" />
-        <ProductForm  :productlines="productlines" @onsubmit="addProductData"/>
+        <ProductForm :productlines="productlines" @onsubmit="addProductData" />
       </div>
       <div v-else-if="currentProductCode" class="flex flex-row">
         <div class="w-11/12">
           <BaseHeader label="Update Product" />
           <ProductForm
-           :productlines="productlines"
-            :edit=true
+            :productlines="productlines"
+            :edit="true"
             :productCode="currentProductCode"
             @onsubmit="updateProductData"
           />
@@ -38,7 +42,7 @@
             @click="deleteProduct"
           ></i>
         </div>
-      </div>  
+      </div>
     </div>
   </div>
 </template>
@@ -64,8 +68,8 @@ export default {
       products: [],
       currentProductCode: null,
       newRecord: false,
-      searchProductLine:"",
-      reset:false,
+      searchProductLine: "",
+      reset: false,
       msg: "Please click on a Product to view, update or delete",
     };
   },
@@ -81,13 +85,13 @@ export default {
     },
 
     retrieveProductLines() {
-      this.productlines=[];
+      this.productlines = [];
       createEndpoint(ENDPOINTS.PRODUCTLINE)
         .fetchAll()
         .then((res) => {
           for (let record in res.data) {
             this.productlines.push(res.data[record].productLine);
-          }   
+          }
         })
         .catch((err) => console.log(err));
     },
@@ -95,22 +99,24 @@ export default {
     setNewRecord() {
       this.newRecord = true;
       this.msg = "";
-      this.currentProductCode= null;
-      this.currentIndex= -1;
+      this.currentProductCode = null;
+      this.currentIndex = -1;
     },
 
     searchByProductLine(option) {
-        this.products=[];
-        this.searchProductLine = option;
-        this.reset = !this.reset;
-        createEndpoint(ENDPOINTS.PRODUCT)
+      this.products = [];
+      this.searchProductLine = option;
+      this.reset = !this.reset;
+      createEndpoint(ENDPOINTS.PRODUCT)
         .fetchAllByCategory(option)
         .then((res) => {
-           for (let record in res.data) {
-             var tempProduct = {"key": res.data[record].productCode,  
-                            "text": res.data[record].productCode};
+          for (let record in res.data) {
+            var tempProduct = {
+              key: res.data[record].productCode,
+              text: res.data[record].productCode,
+            };
             this.products.push(tempProduct);
-          }   
+          }
         })
         .catch((err) => console.log(err));
     },
@@ -121,7 +127,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
-          this.currentProductCode= null;
+          this.currentProductCode = null;
           if (this.searchProductLine)
             this.searchByProductLine(this.searchProductLine);
         })
@@ -144,14 +150,14 @@ export default {
         .update(form.productCode, data)
         .then((res) => {
           console.log(res.data);
-          this.msg = "Record updated successfully!"
+          this.msg = "Record updated successfully!";
         })
         .catch((err) => console.log(err));
     },
 
-     addProductData(form) {
+    addProductData(form) {
       var data = {
-          productLine: form.productLine,
+        productLine: form.productLine,
         productCode: form.productCode,
         productName: form.productName,
         productScale: form.productScale,
@@ -161,14 +167,14 @@ export default {
         buyPrice: form.buyPrice,
         msrp: form.msrp,
       };
-    
+
       createEndpoint(ENDPOINTS.PRODUCT)
         .create(data)
         .then((res) => {
           console.log(res.data);
           if (this.searchProductLine)
             this.searchByProductLine(this.searchProductLine);
-          this.msg = "Record added successfully!"
+          this.msg = "Record added successfully!";
           this.newRecord = false;
         })
         .catch((err) => console.log(err));

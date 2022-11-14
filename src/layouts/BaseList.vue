@@ -1,22 +1,21 @@
- <template>
-    <ul>
-        <li
-          class="className"
-          :class="{ active: index == this.currentIndex }"
-          v-for="(option, index) in options || []"
-          :key="index"
-          @click="onclick(option.key,index)"
-        >
-          <p>{{ option.text }}</p>
-        </li>
-      </ul>
+<template>
+  <ul>
+    <li
+      class="className"
+      :class="{ active: index == this.currentIndex }"
+      v-for="(option, index) in options || []"
+      :key="index"
+      @click="onclick(option.key, index)"
+    >
+      <p>{{ option.text }}</p>
+    </li>
+  </ul>
 </template>
-
 
 <script>
 export default {
   name: "BaseList",
-  emits: ['onclick'],
+  emits: ["onclick"],
   props: {
     options: {
       type: Array,
@@ -27,9 +26,9 @@ export default {
       default: "",
     },
     resetIndex: {
-        type:Boolean,
-        default: true,
-    }
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -37,9 +36,9 @@ export default {
     };
   },
   methods: {
-    onclick(option,index) {
+    onclick(option, index) {
       this.currentIndex = index;
-      this.$emit("onclick", option );
+      this.$emit("onclick", option);
     },
   },
   created() {
@@ -47,7 +46,7 @@ export default {
     this.$watch(
       () => this.resetIndex,
       () => {
-        this.currentIndex=-1;
+        this.currentIndex = -1;
       },
       { immediate: true }
     );

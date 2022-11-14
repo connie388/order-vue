@@ -2,15 +2,17 @@
   <label v-if="label" :for="id" class="font-bold block my-2">
     {{ label }}
   </label>
-  <select  class="className" v-model="selectedOption" @change="onchange" >
-    <option  value="">Please Select One</option>
-    <option v-for="option in options" :key="option" :value="option">{{option}}</option>
+  <select class="className" v-model="selectedOption" @change="onchange">
+    <option value="">Please Select One</option>
+    <option v-for="option in options" :key="option" :value="option">
+      {{ option }}
+    </option>
   </select>
 </template>
 
 <script>
 export default {
-  emits: ['selected'],
+  emits: ["selected"],
   props: {
     id: {
       type: String,
@@ -29,15 +31,15 @@ export default {
       default: "dropdown",
     },
   },
-  data(){
+  data() {
     return {
-      selectedOption : '' 
-    }
+      selectedOption: "",
+    };
   },
-  methods : {
+  methods: {
     onchange() {
-      if(this.selectedOption) this.$emit('selected' , this.selectedOption); 
+      if (this.selectedOption) this.$emit("selected", this.selectedOption);
     },
-  }
-}
+  },
+};
 </script>

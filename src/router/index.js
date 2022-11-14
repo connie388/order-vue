@@ -3,6 +3,16 @@ import PageNotFound from "@/views/PageNotFound.vue";
 
 const routes = [
   {
+    path: "/customer",
+    name: "CustomerList",
+    component: () => import("../components/CustomerList.vue"),
+  },
+  {
+    path: "/order",
+    name: "OrderListByCustomer",
+    component: () => import("../components/OrderListByCustomer.vue"),
+  },
+  {
     path: "/productline",
     name: "ProductLineList",
     component: () => import("../components/ProductLineList.vue"),
@@ -11,11 +21,6 @@ const routes = [
     path: "/product",
     name: "ProductList",
     component: () => import("../components/ProductList.vue"),
-  },
-  {
-    path: "/customer",
-    name: "CustomerList",
-    component: () => import("../components/CustomerList.vue"),
   },
   {
     path: "/:catchAll(.*)*",

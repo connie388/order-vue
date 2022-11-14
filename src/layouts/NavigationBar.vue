@@ -4,9 +4,7 @@
       class="container px-6 py-8 mx-auto md:flex md:justify-between md:items-center"
     >
       <div class="flex items-center justify-between">
-        <router-link
-          to="/"
-          class="text-gray-100 hover:text-indigo-400"
+        <router-link to="/" class="text-gray-100 hover:text-indigo-400"
           >Order Application
         </router-link>
         <!-- Mobile menu button -->
@@ -30,27 +28,33 @@
         :class="showMenu ? 'flex' : 'hidden'"
         class="flex-col mt-8 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0"
       >
-       
         <router-link
           @click="setClick('/productline')"
-          :class=" {active: currentLink === '/productline'}"
+          :class="{ active: currentLink === '/productline' }"
           class="text-gray-100 hover:text-indigo-400"
           to="/productline"
           >Product Line</router-link
         >
         <router-link
           @click="setClick('/product')"
-          :class=" {active: currentLink === '/product'}"
+          :class="{ active: currentLink === '/product' }"
           class="text-gray-100 hover:text-indigo-400"
           to="/product"
           >Product</router-link
         >
         <router-link
           @click="setClick('/customer')"
-          :class=" {active: currentLink === '/customer'}"
+          :class="{ active: currentLink === '/customer' }"
           class="text-gray-100 hover:text-indigo-400"
           to="/customer"
           >Customer</router-link
+        >
+        <router-link
+          @click="setClick('/order')"
+          :class="{ active: currentLink === '/order' }"
+          class="text-gray-100 hover:text-indigo-400"
+          to="/order"
+          >Order</router-link
         >
       </ul>
     </nav>
@@ -62,7 +66,7 @@ export default {
   data() {
     return {
       currentLink: "/",
-    }
+    };
   },
   setup() {
     let showMenu = ref(false);
@@ -72,7 +76,7 @@ export default {
   methods: {
     setClick(link) {
       this.currentLink = link;
-    }
+    },
   },
 };
 </script>
