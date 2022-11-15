@@ -5,6 +5,7 @@ const BASE_URL = "http://localhost:8080/thezone/";
 export const ENDPOINTS = {
   CUSTOMER: "customer",
   ORDER: "order",
+  ORDER_DETAIL: "orderdetail",
   PRODUCTLINE: "productline",
   PRODUCT: "product",
 };
@@ -29,7 +30,16 @@ export const createEndpoint = (endpoint) => {
         ...api,
         fetchByIdAndDateRange: (id, fromDate, toDate) =>
           axios.get(
-            BASE_URL + id + "/" + endpoint + "/" + fromDate + "/" + toDate
+            BASE_URL +
+              id +
+              "/" +
+              endpoint +
+              (fromDate || toDate
+                ? "?" +
+                  (fromDate ? "fromDate=" + fromDate : "") +
+                  (fromDate && toDate ? "&" : "") +
+                  (toDate ? "toDate=" + toDate : "")
+                : "")
           ),
       };
       break;

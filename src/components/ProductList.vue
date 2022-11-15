@@ -78,8 +78,8 @@ export default {
     this.retrieveProductLines();
   },
   methods: {
-    setActiveProduct(productCode) {
-      this.currentProductCode = productCode;
+    setActiveProduct(option) {
+      this.currentProductCode = option.key;
       this.msg = "";
       this.newRecord = false;
     },

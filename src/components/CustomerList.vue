@@ -27,12 +27,12 @@
         <BaseHeader label="New Customer" />
         <CustomerForm @onsubmit="addCustomerData" />
       </div>
-      <div v-else-if="currentCustomerNumber" class="flex flex-row">
+      <div v-else-if="currentCustomerCode" class="flex flex-row">
         <div class="w-11/12">
           <BaseHeader label="Update Customer" />
           <CustomerForm
             :edit="true"
-            :customerNumber="currentCustomerNumber"
+            :customerNumber="currentCustomerCode"
             @onsubmit="updateCustomerData"
           />
         </div>
@@ -66,7 +66,7 @@ export default {
     return {
       searchCustomerName: "",
       customers: [],
-      currentCustomerNumber: null,
+      currentCustomerCode: null,
       newRecord: false,
       reset: false,
       msg: "Please click on a Customer to view, update or delete",
@@ -74,8 +74,8 @@ export default {
   },
 
   methods: {
-    setActiveCustomer(customerNumber) {
-      this.currentCustomerNumber = customerNumber;
+    setActiveCustomer(option) {
+      this.currentCustomerCode = option.key;
       this.msg = "";
       this.newRecord = false;
     },
@@ -100,17 +100,17 @@ export default {
     setNewRecord() {
       this.newRecord = true;
       this.msg = "";
-      this.currentCustomerNumber = null;
+      this.currentCustomerCode = null;
       this.currentIndex = -1;
     },
 
     deleteCustomer() {
       createEndpoint(ENDPOINTS.CUSTOMER)
-        .delete(this.currentCustomerNumber)
+        .delete(this.currentCustomerCode)
         .then((res) => {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
-          this.currentCustomerNumber = null;
+          this.currentCustomerCode = null;
           this.retrieveCustomersByName();
         })
         .catch((err) => console.log(err));

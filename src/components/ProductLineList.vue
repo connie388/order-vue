@@ -63,8 +63,8 @@ export default {
   },
 
   methods: {
-    setActiveProductLine(productline) {
-      this.currentProductLine = productline;
+    setActiveProductLine(option) {
+      this.currentProductLine = option.key;
       this.msg = "";
       this.newRecord = false;
     },

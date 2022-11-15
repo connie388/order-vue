@@ -5,7 +5,7 @@
       :class="{ active: index == this.currentIndex }"
       v-for="(option, index) in options || []"
       :key="index"
-      @click="onclick(option.key, index)"
+      @click="onclick(option, index)"
     >
       <p>{{ option.text }}</p>
     </li>

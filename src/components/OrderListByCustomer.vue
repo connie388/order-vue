@@ -17,49 +17,45 @@
         :options="customers"
         @onclick="setActiveCustomer"
       />
-      <BaseInput
-        type="date"
-        label="From Order Date"
-        v-model="searchOrderFromDate"
-      />
-      <BaseInput
-        type="date"
-        label="To Order Date"
-        v-model="searchOrderToDate"
-      />
-      <BaseButton @click="retrieveOrdersByIdAndDateRange" label="Search" />
-      <!-- <BaseList :resetIndex="resetOrderList" :options="orders" @onclick="setActiveOrder" />
-
-      <BaseButton @click="setNewRecord" label="Add"/> -->
+      <div v-if="this.currentCustomerNumber">
+        <BaseInput
+          type="date"
+          label="From Order Date"
+          v-model="searchOrderFromDate"
+        />
+        <BaseInput
+          type="date"
+          label="To Order Date"
+          v-model="searchOrderToDate"
+        />
+        <BaseButton @click="retrieveOrdersByIdAndDateRange" label="Search" />
+      </div>
     </div>
     <div class="w-3/4">
       <div>
         <p>{{ msg }}</p>
       </div>
-      <div class="table-responsive my-5">
-        <!-- The table component -->
-        <BaseTable :fields="fields" :dataList="orders"></BaseTable>
-      </div>
-      <!-- <div v-if="newRecord">
-        <BaseHeader label="New Order" />
-        <OrderForm  @onsubmit="addOrderData"/>
-      </div>
-      <div v-else-if="currentOrderNumber" class="flex flex-row">
-        <div class="w-11/12">
-          <BaseHeader label="Update Order" />
-          <OrderForm
-            :edit=true
-            :orderNumber="currentOrderNumber"
-            @onsubmit="updateOrderData"
-          />
+      <div v-if="this.currentCustomerNumber">
+        <div>
+          <BaseHeader :label="'Customer: ' + this.currentCustomerName" />
         </div>
-        <div class="w-1/12">
-          <i
-            class="fa-solid fa-trash-can text-xs text-blue-500 hover:text-blue-700 sm:text-3xl md:text-6xl"
-            @click="deleteOrder"
-          ></i>
+        <div v-if="submitted">
+          <!-- The table component -->
+          <BaseTable
+            @onclick="retrieveOrderDetail"
+            :fields="orderFields"
+            :dataList="orders"
+            :showmsg="true"
+            :reset="resetOrders"
+          ></BaseTable>
+
+          <BaseTable
+            :fields="orderDetailFields"
+            :dataList="orderDetails"
+            :reset="resetOrders"
+          ></BaseTable>
         </div>
-      </div>   -->
+      </div>
     </div>
   </div>
 </template>
@@ -90,36 +86,46 @@ export default {
       searchOrderToDate: null,
       customers: [],
       orders: [],
+      orderDetails: [],
       currentOrderNumber: null,
       currentCustomerNumber: null,
-      newRecord: false,
+      currentCustomerName: "",
       reset: false,
-      resetOrderList: false,
+      resetOrders: false,
+      submitted: false,
       msg: "Please click on a Order to view, update or delete",
     };
   },
 
   setup() {
-    const fields = [
+    const orderFields = [
       { column: "orderNumber", header: "Order Number" },
       { column: "orderDate", header: "Order Date" },
       { column: "requiredDate", header: "Required Date" },
       { column: "shippedDate", header: "Shipped Date" },
       { column: "status", header: "Status" },
     ];
-    return { fields };
+    const orderDetailFields = [
+      { column: "orderNumber", header: "Order Number" },
+      { column: "productCode", header: "Product Code" },
+      { column: "quantityOrdered", header: "Quantity" },
+      { column: "priceEach", header: "Price Each" },
+    ];
+    return { orderFields, orderDetailFields };
   },
 
   methods: {
-    setActiveCustomer(customerNumber) {
-      this.currentCustomerNumber = customerNumber;
+    setActiveCustomer(option) {
+      this.currentCustomerNumber = option.key;
+      this.currentCustomerName = option.text;
       this.msg = "";
-      this.newRecord = false;
+      this.submitted = false;
+      this.orders = [];
+      this.orderDetails = [];
     },
-    setActiveOrder(orderNumber) {
-      this.currentOrderNumber = orderNumber;
+    setActiveOrder(option) {
+      this.currentOrderNumber = option.key;
       this.msg = "";
-      this.newRecord = false;
     },
 
     retrieveCustomersByName() {
@@ -141,8 +147,9 @@ export default {
 
     retrieveOrdersByIdAndDateRange() {
       this.orders = [];
-      this.resetOrderList = !this.resetOrderList;
-
+      this.orderDetails = [];
+      this.submitted = true;
+      this.resetOrders = !this.resetOrders;
       createEndpoint(ENDPOINTS.ORDER)
         .fetchByIdAndDateRange(
           this.currentCustomerNumber,
@@ -150,66 +157,28 @@ export default {
           this.searchOrderToDate
         )
         .then((res) => {
-          this.orders = res.data;
-        })
-        .catch((err) => console.log(err));
-    },
-    setNewRecord() {
-      this.newRecord = true;
-      this.msg = "";
-      this.currentOrderNumber = null;
-      this.currentIndex = -1;
-    },
-
-    deleteOrder() {
-      createEndpoint(ENDPOINTS.ORDER)
-        .delete(this.currentOrderNumber)
-        .then((res) => {
-          console.log(res.data);
-          this.msg = "Record deleted successfully!";
-          this.currentOrderNumber = null;
-          this.retrieveOrdersByName();
+          for (let record in res.data) {
+            var tempOrder = {
+              orderNumber: res.data[record].orderNumber,
+              orderDate: res.data[record].orderDate.substring(0, 10),
+              requiredDate: res.data[record].requiredDate.substring(0, 10),
+              shippedDate: res.data[record].shippedDate.substring(0, 10),
+              status: res.data[record].status,
+              comments: res.data[record].comments,
+              // customerNumber: res.data[record].customerNumber,
+            };
+            this.orders.push(tempOrder);
+          }
         })
         .catch((err) => console.log(err));
     },
 
-    updateOrderData(form) {
-      var data = {
-        customerNumber: form.customerNumber,
-        orderNumber: form.orderNumber,
-        orderDate: form.orderDate,
-        requiredDate: form.requiredDate,
-        shippedDate: form.shippedDate,
-        status: form.status,
-        comments: form.comments,
-      };
-      createEndpoint(ENDPOINTS.ORDER)
-        .update(form.orderNumber, data)
+    retrieveOrderDetail(item) {
+      this.orderDetails = [];
+      createEndpoint(ENDPOINTS.ORDER_DETAIL)
+        .fetchById(item.orderNumber)
         .then((res) => {
-          console.log(res.data);
-          this.msg = "Record updated successfully!";
-        })
-        .catch((err) => console.log(err));
-    },
-
-    addOrderData(form) {
-      var data = {
-        customerNumber: form.customerNumber,
-        orderNumber: form.orderNumber,
-        orderDate: form.orderDate,
-        requiredDate: form.requiredDate,
-        shippedDate: form.shippedDate,
-        status: form.status,
-        comments: form.comments,
-      };
-
-      createEndpoint(ENDPOINTS.ORDER)
-        .create(data)
-        .then((res) => {
-          console.log(res.data);
-          this.msg = "Record added successfully!";
-          this.newRecord = false;
-          this.retrieveOrdersByName();
+          this.orderDetails = res.data;
         })
         .catch((err) => console.log(err));
     },
