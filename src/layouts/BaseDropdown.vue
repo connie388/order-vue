@@ -1,8 +1,8 @@
 <template>
-  <label v-if="label" :for="id" class="font-bold block my-2">
+  <label v-if="label" :for="id" :class="labelClass">
     {{ label }}
   </label>
-  <select class="className" v-model="selectedOption" @change="onchange">
+  <select :class="className" v-model="selectedOption" @change="onchange">
     <option value="">Please Select One</option>
     <option v-for="option in options" :key="option" :value="option">
       {{ option }}
@@ -22,13 +22,17 @@ export default {
       type: String,
       default: "",
     },
+    labelClass: {
+      type: String,
+      default: "font-bold block text-sm my-2",
+    },
     options: {
       type: Array,
       required: true,
     },
     className: {
       type: String,
-      default: "dropdown",
+      default: "text-left w-full text-xs my-2",
     },
   },
   data() {

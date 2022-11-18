@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 // import Vue from "vue";
 import App from "./App.vue";
-import "./assets/reset.css";
+// import "./assets/reset.css";
 import "./assets/index.css";
 import router from "./router";
 

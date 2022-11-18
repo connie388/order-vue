@@ -3,13 +3,13 @@
     <div class="w-1/4">
       <BaseHeader
         label="Select Product Line"
-        class="font-bold block text-4xl text-start"
+        class="font-bold block text-sm text-start"
       />
       <BaseDropdown :options="productlines" @selected="searchByProductLine" />
 
       <BaseHeader
         label="Product List"
-        class="mt-10 font-bold block text-4xl text-start"
+        class="mt-10 font-bold block text-sm text-start"
       />
       <BaseList
         :resetIndex="reset"

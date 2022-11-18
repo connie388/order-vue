@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-row">
-    <div class="mr-4 w-1/4">
+    <div class="w-1/4">
       <BaseInput
         id="customerNameLike"
         label="Customer Name"
-        labelClass="my-2 font-bold block text-sm text-start"
+        labelClass="my-2 font-bold block text-4xl text-start"
         v-model="searchCustomerName"
       />
       <BaseButton @click="retrieveCustomersByName" label="Search" />
       <BaseHeader
         label="Customer List"
-        class="mt-10 font-bold block text-sm text-start"
+        class="mt-10 font-bold block text-4xl text-start"
       />
       <BaseList
         :resetIndex="reset"
@@ -42,30 +42,22 @@
         <div v-if="submitted">
           <!-- The table component -->
           <BaseTable
-            @viewItem="viewOrder"
+            @onclick="retrieveOrderDetail"
             :fields="orderFields"
             :dataList="orders"
             :showmsg="true"
             :reset="resetOrders"
-            :filterEnable="true"
-          />
+          ></BaseTable>
+
+          <BaseTable
+            :fields="orderDetailFields"
+            :dataList="orderDetails"
+            :reset="resetOrders"
+          ></BaseTable>
         </div>
       </div>
     </div>
   </div>
-  <BaseModal :showing="visibleOrderView" @close="this.visibleOrderView = false">
-    <template v-slot:header
-      ><h1 class="text-xl font-bold text-center">
-        Order Information
-      </h1></template
-    >
-
-    <template v-slot:body>
-      <OrderFormView :data="selectedOrder" />
-    </template>
-
-    <!-- <template v-slot:footer> <BaseButton label="Add" /></template> -->
-  </BaseModal>
 </template>
 
 <script>
@@ -74,8 +66,8 @@ import BaseButton from "../layouts/BaseButton.vue";
 import BaseList from "../layouts/BaseList.vue";
 import BaseInput from "../layouts/BaseInput.vue";
 import BaseTable from "../layouts/BaseTable.vue";
-import BaseModal from "../layouts/BaseModal";
-import OrderFormView from "./OrderFormView";
+
+// import OrderForm from "./OrderForm";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 
 export default {
@@ -85,8 +77,7 @@ export default {
     BaseList,
     BaseInput,
     BaseTable,
-    BaseModal,
-    OrderFormView,
+    // OrderForm,
   },
   data() {
     return {
@@ -95,17 +86,14 @@ export default {
       searchOrderToDate: null,
       customers: [],
       orders: [],
-
+      orderDetails: [],
       currentOrderNumber: null,
       currentCustomerNumber: null,
       currentCustomerName: "",
-      selectedOrder: [],
       reset: false,
       resetOrders: false,
-
       submitted: false,
       msg: "Please click on a Order to view, update or delete",
-      visibleOrderView: false,
     };
   },
 
@@ -117,18 +105,13 @@ export default {
       { column: "shippedDate", header: "Shipped Date" },
       { column: "status", header: "Status" },
     ];
-
     const orderDetailFields = [
       { column: "orderNumber", header: "Order Number" },
       { column: "productCode", header: "Product Code" },
       { column: "quantityOrdered", header: "Quantity" },
       { column: "priceEach", header: "Price Each" },
     ];
-
-    return {
-      orderFields,
-      orderDetailFields,
-    };
+    return { orderFields, orderDetailFields };
   },
 
   methods: {
@@ -138,6 +121,7 @@ export default {
       this.msg = "";
       this.submitted = false;
       this.orders = [];
+      this.orderDetails = [];
     },
     setActiveOrder(option) {
       this.currentOrderNumber = option.key;
@@ -163,7 +147,7 @@ export default {
 
     retrieveOrdersByIdAndDateRange() {
       this.orders = [];
-
+      this.orderDetails = [];
       this.submitted = true;
       this.resetOrders = !this.resetOrders;
       createEndpoint(ENDPOINTS.ORDER)
@@ -181,8 +165,6 @@ export default {
               shippedDate: res.data[record].shippedDate.substring(0, 10),
               status: res.data[record].status,
               comments: res.data[record].comments,
-              createdAt: res.data[record].createdAt,
-              updatedAt: res.data[record].updatedAt,
               // customerNumber: res.data[record].customerNumber,
             };
             this.orders.push(tempOrder);
@@ -191,17 +173,15 @@ export default {
         .catch((err) => console.log(err));
     },
 
-    viewOrder(item) {
-      this.selectedOrder = [item];
-      this.visibleOrderView = true;
+    retrieveOrderDetail(item) {
+      this.orderDetails = [];
+      createEndpoint(ENDPOINTS.ORDER_DETAIL)
+        .fetchById(item.orderNumber)
+        .then((res) => {
+          this.orderDetails = res.data;
+        })
+        .catch((err) => console.log(err));
     },
-
-    // openModal() {
-    //   this.visibleOrderView = true;
-    // },
-    // close() {
-    //   this.visibleOrderView = false;
-    // },
   },
 };
 </script>

@@ -4,13 +4,13 @@
       <BaseInput
         id="customerNameLike"
         label="Customer Name"
-        labelClass="my-2 font-bold block text-4xl text-start"
+        labelClass="my-2 font-bold block text-sm text-start"
         v-model="searchCustomerName"
       />
       <BaseButton @click="retrieveCustomersByName" label="Search" />
       <BaseHeader
         label="Customer List"
-        class="mt-10 font-bold block text-4xl text-start"
+        class="mt-10 font-bold block text-sm text-start"
       />
       <BaseList
         :resetIndex="reset"

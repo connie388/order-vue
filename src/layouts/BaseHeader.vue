@@ -14,7 +14,7 @@ export default {
     },
     className: {
       type: String,
-      default: "my-2 font-bold block text-4xl text-center",
+      default: "my-2 font-bold block text-sm text-center",
     },
   },
 };

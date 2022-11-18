@@ -3,7 +3,7 @@
     <div class="w-1/4">
       <BaseHeader
         label="Product Line List"
-        class="font-bold block text-4xl text-start"
+        class="font-bold block text-sm text-start"
       />
       <BaseList :options="productlines" @onclick="setActiveProductLine" />
       <BaseButton @click="setNewRecord" label="Add" />

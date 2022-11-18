@@ -1,13 +1,13 @@
 <template>
   <ul>
     <li
-      class="className"
+      class="text-left w-full text-xs my-2"
       :class="{ active: index == this.currentIndex }"
       v-for="(option, index) in options || []"
       :key="index"
       @click="onclick(option, index)"
     >
-      <p>{{ option.text }}</p>
+      <p class="className">{{ option.text }}</p>
     </li>
   </ul>
 </template>
@@ -23,7 +23,7 @@ export default {
     },
     className: {
       type: String,
-      default: "",
+      default: "text-left w-full text-xs my-2",
     },
     resetIndex: {
       type: Boolean,

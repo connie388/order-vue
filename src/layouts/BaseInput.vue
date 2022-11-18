@@ -18,7 +18,7 @@ export default {
   props: {
     labelClass: {
       type: String,
-      default: "font-bold block my-2",
+      default: "text-left font-bold block text-sm my-2",
     },
     id: {
       type: String,
@@ -38,7 +38,7 @@ export default {
     },
     className: {
       type: String,
-      default: "border w-full my-2",
+      default: "border w-full text-xs my-2",
     },
     disabled: {
       type: Boolean,
