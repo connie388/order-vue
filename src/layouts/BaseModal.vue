@@ -1,24 +1,24 @@
 <template>
   <Transition name="fade">
-    <div
-      v-if="showing"
-      class="overflow-auto fixed inset-0 w-full h-screen flex items-center justify-center bg-semi-75"
-    >
-      <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8">
-        <slot />
-        <header class="relative" id="modalTitle">
+    <div v-if="showing" :class="modalContainerClass">
+      <div :class="modalContentClass">
+        <!-- <slot /> -->
+        <header
+          class="px-4 py-6 flex justify-between items-center border-b-2 border-white"
+          id="modalTitle"
+        >
           <slot name="header"></slot>
           <i
-            class="fa-solid fa-xmark absolute top-0 right-0"
+            class="fa-solid fa-xmark w-7 p-2 bg-gray-300 rounded-full"
             @click="close"
           ></i>
         </header>
 
-        <main class="relative" id="modalDescription">
+        <main class="px-4 py-6" id="modalDescription">
           <slot name="body"></slot>
         </main>
 
-        <footer class="flex-col justify-end">
+        <footer class="px-4 py-6 border-t-2 border-white">
           <div class="items-center">
             <slot name="footer"></slot>
             <BaseButton @click.prevent="close" label="Close" />
@@ -33,6 +33,7 @@
 import BaseButton from "./BaseButton";
 export default {
   name: "BaseModal",
+
   components: {
     BaseButton,
   },
@@ -43,6 +44,16 @@ export default {
   },
 
   props: {
+    modalContainerClass: {
+      type: String,
+      default:
+        "fixed inset-0 w-full h-screen flex items-center justify-center bg-[#000000da]",
+    },
+    modalContentClass: {
+      type: String,
+      default:
+        "overflow-auto rounded-3xl bg-white flex flex-col justify-between w-3/6 h-5/6",
+    },
     showing: {
       required: true,
       type: Boolean,

@@ -1,5 +1,5 @@
 <template>
-  <h4 :class="className">
+  <h4>
     {{ label }}
   </h4>
 </template>
@@ -14,7 +14,7 @@ export default {
     },
     className: {
       type: String,
-      default: "my-2 font-bold block text-sm text-center",
+      default: "field-label",
     },
   },
 };

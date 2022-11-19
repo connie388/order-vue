@@ -110,7 +110,6 @@
           </div>
           <td
             class="text-right px-6 py-4 text-xs font-medium text-gray-800 whitespace-nowrap"
-            :class="{ active: index == this.currentIndex }"
             v-for="field in fields"
             :key="field.column"
             @click="onclick(item, index)"

@@ -5,7 +5,7 @@
   <select :class="className" v-model="selectedOption" @change="onchange">
     <option value="">Please Select One</option>
     <option v-for="option in options" :key="option" :value="option">
-      {{ option }}
+      {{ option.text }}
     </option>
   </select>
 </template>
@@ -24,7 +24,7 @@ export default {
     },
     labelClass: {
       type: String,
-      default: "font-bold block text-sm my-2",
+      default: "field-label",
     },
     options: {
       type: Array,
@@ -32,7 +32,7 @@ export default {
     },
     className: {
       type: String,
-      default: "text-left w-full text-xs my-2",
+      default: "field",
     },
   },
   data() {

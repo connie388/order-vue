@@ -1,5 +1,5 @@
 <template>
-  <label v-if="label" :for="id" class="my-2 font-bold text-sm block">
+  <label v-if="label" :for="id" :class="labelClass">
     {{ label }}
   </label>
   <textarea
@@ -23,13 +23,17 @@ export default {
       type: String,
       default: "",
     },
+    labelClass: {
+      type: String,
+      default: "field-label",
+    },
     modelValue: {
       type: [String, Number],
       default: "",
     },
     className: {
       type: String,
-      default: "border w-full my-2 text-xs",
+      default: "field-input",
     },
     row: {
       type: Number,

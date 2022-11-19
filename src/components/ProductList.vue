@@ -90,7 +90,11 @@ export default {
         .fetchAll()
         .then((res) => {
           for (let record in res.data) {
-            this.productlines.push(res.data[record].productLine);
+            var temp = {
+              key: res.data[record].productLine,
+              text: res.data[record].productLine,
+            };
+            this.productlines.push(temp);
           }
         })
         .catch((err) => console.log(err));
@@ -105,10 +109,10 @@ export default {
 
     searchByProductLine(option) {
       this.products = [];
-      this.searchProductLine = option;
+      this.searchProductLine = option.key;
       this.reset = !this.reset;
       createEndpoint(ENDPOINTS.PRODUCT)
-        .fetchAllByCategory(option)
+        .fetchAllByCategory(option.key)
         .then((res) => {
           for (let record in res.data) {
             var tempProduct = {

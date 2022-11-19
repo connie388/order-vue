@@ -2,7 +2,7 @@
   <label v-if="label" :for="id" :class="className">
     {{ label }}
   </label>
-  <label v-if="info" class="ml-2 text-left w-full text-xs my-2">
+  <label v-if="info" :class="infoClassName">
     {{ info }}
   </label>
 </template>
@@ -25,7 +25,11 @@ export default {
     },
     className: {
       type: String,
-      default: "font-bold block text-sm my-2",
+      default: "field-label",
+    },
+    infoClassName: {
+      type: String,
+      default: "field",
     },
   },
 };

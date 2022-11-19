@@ -161,7 +161,7 @@ created() {
     },
 
     setFormProductLine(option) {
-      this.form.productLine=option;
+      this.form.productLine=option.key;
     },
 
     getProduct() {

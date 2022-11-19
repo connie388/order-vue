@@ -7,7 +7,8 @@
     :type="type"
     :value="modelValue"
     @input="updateInput"
-    :class="className"
+    :class="inputClassName"
+    :placeholder="placeholder"
     :disabled="disabled"
   />
 </template>
@@ -18,7 +19,7 @@ export default {
   props: {
     labelClass: {
       type: String,
-      default: "text-left font-bold block text-sm my-2",
+      default: "field-label",
     },
     id: {
       type: String,
@@ -38,14 +39,24 @@ export default {
     },
     className: {
       type: String,
-      default: "border w-full text-xs my-2",
+      default: "field-input",
     },
     disabled: {
       type: Boolean,
       default: false,
     },
+    placeholder: {
+      type: String,
+      default: "",
+    },
   },
 
+  computed: {
+    inputClassName() {
+      if (this.disabled) return "field";
+      return this.className;
+    },
+  },
   methods: {
     updateInput(event) {
       this.$emit("update:modelValue", event.target.value);
