@@ -8,7 +8,7 @@
       <div class="flex items-center space-x-2">
         <div class="relative">
           <span
-            class="relative inline-flex items-center px-3 py-3 space-x-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md sm:py-2"
+            class="relative inline-flex items-center px-3 py-3 space-x-2 text-sm font-medium text-gray-600 rounded-md sm:py-2"
           >
             <div>
               <i class="fa-solid fa-filter fa-lg"></i>
@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div class="flex justify-between py-3 pl-2">
+      <div class="flex flex-wrap justify-between py-3 pl-2">
         <div
           class="relative min-w-xs"
           v-for="field of fields"
@@ -56,7 +56,7 @@
           <!-- loop through each value of the fields to get the table header -->
           <th
             scope="col"
-            class="px-6 py-3 text-xs font-bold text-left text-gray-500"
+            class="px-6 py-3 text-xs font-bold text-right  uppercase"
             v-for="field in fields"
             :key="field.column"
             @click="setSortColumn(field.column)"

@@ -66,7 +66,6 @@
   >
     <template v-slot:body>
       <p>{{ this.msg }}</p>
-      <p />
     </template>
   </BaseModal>
 </template>

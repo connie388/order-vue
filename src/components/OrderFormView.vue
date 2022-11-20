@@ -1,29 +1,37 @@
 <template>
-  <div class="flex flex-row">
-    <div class="w-1/2">
-      <div v-if="orderAllFields">
-        <div :key="index" v-for="(item, index) in orderAllFields">
-          <BaseLabel
-            id="index"
-            :label="item.header"
-            :info="computedData(item.column)"
-          />
-        </div>
-      </div>
+  <div class="flex flex-wrap">
+    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+      <BaseLabel
+        id="customerName"
+        label="Customer Name"
+        :info="order.customerName"
+      />
     </div>
-    <div class="w-1/2">
-      <div class="overflow-auto">
-        <BaseTable
-          :fields="orderProductsFields"
-          :dataList="orderDetails"
-          :viewEnable="false"
-          :editEnable="false"
-          :deleteEnable="false"
-          :reset="reset"
-          :filterEnable="false"
-        />
-      </div>
+
+    <div
+      class="w-full md:w-1/3 px-3 mb-6 md:mb-0"
+      :key="index"
+      v-for="(item, index) in orderAllFields"
+    >
+      <BaseLabel
+        id="index"
+        :label="item.header"
+        :info="computedData(item.column)"
+      />
     </div>
+  </div>
+
+  <div class="overflow-auto">
+    <br />
+    <BaseTable
+      :fields="orderProductsFields"
+      :dataList="orderDetails"
+      :viewEnable="false"
+      :editEnable="false"
+      :deleteEnable="false"
+      :reset="reset"
+      :filterEnable="false"
+    />
   </div>
 </template>
 <script>
@@ -34,8 +42,8 @@ import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 export default {
   props: {
     //
-    data: {
-      type: Array,
+    order: {
+      type: Object,
     },
 
     fields: {
@@ -83,10 +91,10 @@ export default {
   created() {
     // watch the props to fetch the data again
     this.$watch(
-      () => this.data[0]["orderNumber"],
+      () => this.order["orderNumber"],
       () => {
-        if (this.data[0]["orderNumber"])
-          this.retrieveOrderDetail(this.data[0]["orderNumber"]);
+        if (this.order["orderNumber"])
+          this.retrieveOrderDetail(this.order["orderNumber"]);
       },
       // fetch the data when the view is created and the data is
       // already being observed
@@ -96,7 +104,7 @@ export default {
 
   methods: {
     computedData(col) {
-      return this.data[0][col]?.toString();
+      return this.order[col]?.toString();
     },
     retrieveOrderDetail(orderNumber) {
       this.orderDetails = [];

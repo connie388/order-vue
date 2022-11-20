@@ -8,6 +8,7 @@ export const ENDPOINTS = {
   ORDER_DETAIL: "orderdetail",
   PRODUCTLINE: "productline",
   PRODUCT: "product",
+  ORDER_CUSTOMER: "order/customer",
 };
 export const createEndpoint = (endpoint) => {
   let url = BASE_URL + endpoint + "/";
@@ -19,6 +20,19 @@ export const createEndpoint = (endpoint) => {
     delete: (id) => axios.delete(url + id),
   };
   switch (endpoint) {
+    case ENDPOINTS.ORDER_CUSTOMER:
+      api = {
+        fetchByNameAndDateRange: (name, fromDate, toDate) =>
+          axios.get(
+            BASE_URL +
+              endpoint +
+              "?customerNameLike=" +
+              name +
+              (fromDate ? "&fromDate=" + fromDate : "") +
+              (toDate ? "&toDate=" + toDate : "")
+          ),
+      };
+      break;
     case ENDPOINTS.CUSTOMER:
       api = {
         ...api,

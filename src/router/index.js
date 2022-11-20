@@ -10,7 +10,7 @@ const routes = [
   {
     path: "/order",
     name: "OrderListByCustomer",
-    component: () => import("../components/OrderListByCustomer.vue"),
+    component: () => import("../components/OrderList.vue"),
   },
   {
     path: "/productline",

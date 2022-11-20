@@ -1,19 +1,27 @@
 <template>
-  <label v-if="label" :for="id" :class="labelClass">
-    {{ label }}
-  </label>
-  <select :class="className" v-model="selectedOption" @change="onchange">
-    <option value="">Please Select One</option>
-    <option v-for="option in options" :key="option" :value="option">
-      {{ option.text }}
-    </option>
-  </select>
+  <div>
+    <label v-if="label" :for="id" :class="labelClass">
+      {{ label }}
+    </label>
+    <select :class="className" v-model="selectedOption" @change="onchange">
+      <option :value="selectedOption?.key || ''">
+        {{ selectedOption?.text || "Please select one." }}
+      </option>
+      <option v-for="option in options" :key="option" :value="option">
+        {{ option?.text }}
+      </option>
+    </select>
+  </div>
 </template>
 
 <script>
 export default {
   emits: ["selected"],
   props: {
+    initialOption: {
+      type: Object,
+      default: null,
+    },
     id: {
       type: String,
       default: "",
@@ -39,6 +47,10 @@ export default {
     return {
       selectedOption: "",
     };
+  },
+  created() {
+    this.selectedOption = this.initialOption;
+    console.log(this.selectedOption?.text);
   },
   methods: {
     onchange() {

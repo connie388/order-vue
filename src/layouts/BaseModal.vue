@@ -19,10 +19,8 @@
         </main>
 
         <footer class="px-4 py-6 border-t-2 border-white">
-          <div class="items-center">
-            <slot name="footer"></slot>
-            <BaseButton @click.prevent="close" label="Close" />
-          </div>
+          <slot name="footer"></slot>
+          <BaseButton @click.prevent="close" label="Close" />
         </footer>
       </div>
     </div>
@@ -52,7 +50,7 @@ export default {
     modalContentClass: {
       type: String,
       default:
-        "overflow-auto rounded-3xl bg-white flex flex-col justify-between w-3/6 h-5/6",
+        "overflow-auto rounded-3xl bg-white flex flex-col justify-between w-4/6 h-5/6",
     },
     showing: {
       required: true,
