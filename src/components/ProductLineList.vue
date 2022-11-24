@@ -6,7 +6,11 @@
         class="font-bold block text-sm text-start"
       />
       <BaseList :options="productlines" @onclick="setActiveProductLine" />
-      <BaseButton @click="setNewRecord" label="Add" />
+      <BaseButton
+        className="btn-green"
+        @click="setNewRecord"
+        label="+Add Product Line"
+      />
     </div>
     <div class="w-3/4">
       <div>

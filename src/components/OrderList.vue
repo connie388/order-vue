@@ -32,21 +32,39 @@
     </div>
     <div class="w-full md:w-1/5 px-3 mb-6 md:mb-0">
       <br />
-      <BaseButton @click="this.visibleOrderAdd = true" label="+Add Order" />
+      <BaseButton
+        className="btn-green"
+        @click="this.visibleOrderAdd = true"
+        label="+Add Order"
+      />
     </div>
   </div>
 
   <div class="overflow-auto">
-    <BaseTable
+    <BaseViewTable
       :fields="orderCustomerFields"
+      :editMode="false"
       :dataList="orders"
-      @viewItem="viewOrder"
       @editItem="editOrder"
       :deleteEnable="false"
+      :viewEnable="false"
       :filterEnable="true"
     />
   </div>
 
+  <BaseModal :showing="visibleOrderAdd" @close="this.visibleOrderAdd = false">
+    <template v-slot:header
+      ><h1 class="text-xl font-bold text-center">
+        Add Order Information
+      </h1></template
+    >
+
+    <template v-slot:body>
+      <OrderFormAdd :orderNumber="orderNumber" @onSubmit="addOrderData" />
+    </template>
+
+    <!-- <template v-slot:footer> <BaseButton label="Add" /></template> -->
+  </BaseModal>
   <BaseModal :showing="visibleOrderEdit" @close="this.visibleOrderEdit = false">
     <template v-slot:header
       ><h1 class="text-xl font-bold text-center">
@@ -55,7 +73,7 @@
     >
 
     <template v-slot:body>
-      <OrderFormEdit :order="selectedOrder" @onsubmit="updateOrderData" />
+      <OrderFormEdit :order="selectedOrder" @onSubmit="updateOrderData" />
     </template>
 
     <!-- <template v-slot:footer> <BaseButton label="Add" /></template> -->
@@ -88,20 +106,22 @@
 <script>
 import BaseButton from "../layouts/BaseButton.vue";
 import BaseInput from "../layouts/BaseInput.vue";
-import BaseTable from "../layouts/BaseTable.vue";
+import BaseViewTable from "../layouts/BaseViewTable.vue";
 import BaseModal from "../layouts/BaseModal";
 import OrderFormView from "./OrderFormView";
 import OrderFormEdit from "./OrderFormEdit";
+import OrderFormAdd from "./OrderFormAdd";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 
 export default {
   components: {
     BaseButton,
     BaseInput,
-    BaseTable,
+    BaseViewTable,
     BaseModal,
     OrderFormView,
     OrderFormEdit,
+    OrderFormAdd,
   },
   data() {
     return {
@@ -111,8 +131,10 @@ export default {
       orders: [],
       visibleOrderView: false,
       visibleOrderEdit: false,
+      visibleOrderAdd: false,
       visibleMsgView: false,
       selectedOrder: null,
+      orderNumber: null,
       msg: "Please click on a Order to view, update or delete",
     };
   },
@@ -127,12 +149,16 @@ export default {
       { column: "shippedDate", header: "Shipped Date" },
       { column: "status", header: "Status" },
     ];
+
     return {
       orderCustomerFields,
     };
   },
 
   methods: {
+    addOrder() {
+      this.visibleOrderAdd = true;
+    },
     editOrder(item) {
       this.selectedOrder = item;
       this.visibleOrderEdit = true;
@@ -162,10 +188,8 @@ export default {
               comments: res.data[record].comments,
               createdAt: res.data[record].createdAt,
               updatedAt: res.data[record].updatedAt,
-              // customerNumber: res.data[record].customerNumber,
             };
             this.orders.push(tempOrder);
-            // console.log(tempOrder);
           }
         })
         .catch((err) => console.log(err));
@@ -179,12 +203,40 @@ export default {
         shippedDate: form.shippedDate,
         status: form.status,
         comments: form.comments,
+        orderDetailList: form.orderDetailList,
       };
+
       createEndpoint(ENDPOINTS.ORDER)
         .update(form.orderNumber, data)
         .then((res) => {
           console.log(res.data);
           this.msg = "Order is updated successfully!";
+          this.retrieveOrdersByNameAndDateRange();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.msg = "Something wrong happened";
+        });
+      this.visibleMsgView = true;
+    },
+    addOrderData(form) {
+      var data = {
+        orderNumber: form.orderNumber * 1,
+        customerNumber: form.customerNumber,
+        orderDate: form.orderDate,
+        requiredDate: form.requiredDate,
+        shippedDate: form.shippedDate,
+        status: form.status,
+        comments: form.comments,
+        orderDetailList: form.orderDetailList,
+      };
+
+      createEndpoint(ENDPOINTS.ORDER)
+        .create(data)
+        .then((res) => {
+          console.log(res.data);
+          this.orderNumber = res.data.orderNumber;
+          this.msg = "Order is added successfully!";
           this.retrieveOrdersByNameAndDateRange();
         })
         .catch((err) => {

@@ -23,20 +23,19 @@
 
   <div class="overflow-auto">
     <br />
-    <BaseTable
+    <BaseViewTable
       :fields="orderProductsFields"
       :dataList="orderDetails"
       :viewEnable="false"
       :editEnable="false"
       :deleteEnable="false"
-      :reset="reset"
       :filterEnable="false"
     />
   </div>
 </template>
 <script>
 import BaseLabel from "../layouts/BaseLabel.vue";
-import BaseTable from "../layouts/BaseTable.vue";
+import BaseViewTable from "../layouts/BaseViewTable.vue";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 
 export default {
@@ -44,13 +43,6 @@ export default {
     //
     order: {
       type: Object,
-    },
-
-    fields: {
-      type: Array,
-    },
-    detailFields: {
-      type: Array,
     },
   },
 
@@ -79,12 +71,11 @@ export default {
 
   components: {
     BaseLabel,
-    BaseTable,
+    BaseViewTable,
   },
   data() {
     return {
       orderDetails: [],
-      reset: false,
     };
   },
 
@@ -108,13 +99,12 @@ export default {
     },
     retrieveOrderDetail(orderNumber) {
       this.orderDetails = [];
-      createEndpoint(ENDPOINTS.ORDER_DETAIL)
+      createEndpoint(ENDPOINTS.ORDER)
         .fetchById(orderNumber)
         .then((res) => {
-          this.orderDetails = JSON.parse(JSON.stringify(res.data));
+          this.orderDetails = res.data?.orderDetailList;
         })
         .catch((err) => console.log(err));
-      this.reset = !this.reset;
     },
   },
 };

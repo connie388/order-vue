@@ -12,13 +12,14 @@
     </div>
     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
       <BaseButton
+        className="btn-green"
         @click="this.visibleCustomerAdd = true"
         label="+Add Customer"
       />
     </div>
   </div>
   <div class="overflow-auto">
-    <BaseTable
+    <BaseViewTable
       :fields="customerFields"
       :dataList="customers"
       :viewEnable="false"
@@ -74,7 +75,7 @@
 import BaseButton from "../layouts/BaseButton.vue";
 import BaseInput from "../layouts/BaseInput.vue";
 import BaseModal from "../layouts/BaseModal.vue";
-import BaseTable from "../layouts/BaseTable.vue";
+import BaseViewTable from "../layouts/BaseViewTable.vue";
 import CustomerFormEdit from "./CustomerFormEdit.vue";
 
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
@@ -82,7 +83,7 @@ export default {
   components: {
     BaseButton,
     BaseInput,
-    BaseTable,
+    BaseViewTable,
     BaseModal,
     CustomerFormEdit,
   },
@@ -100,12 +101,16 @@ export default {
 
   setup() {
     const customerFields = [
-      { column: "customerNumber", header: "Customer Number" },
-      { column: "customerName", header: "Customer Name" },
-      { column: "contactFirstName", header: "Contact First Name" },
-      { column: "contactLastName", header: "Contact Last Name" },
-      { column: "phone", header: "Phone" },
-      { column: "creditLimit", header: "CreditLime" },
+      { column: "customerNumber", header: "Customer Number", type: "number" },
+      { column: "customerName", header: "Customer Name", type: "text" },
+      {
+        column: "contactFirstName",
+        header: "Contact First Name",
+        type: "text",
+      },
+      { column: "contactLastName", header: "Contact Last Name", type: "text" },
+      { column: "phone", header: "Phone", type: "text" },
+      { column: "creditLimit", header: "Credit Limit", type: "number" },
     ];
     return {
       customerFields,

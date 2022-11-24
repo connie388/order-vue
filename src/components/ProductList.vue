@@ -16,7 +16,11 @@
         :options="products"
         @onclick="setActiveProduct"
       />
-      <BaseButton @click="setNewRecord" label="Add" />
+      <BaseButton
+        className="btn-green"
+        @click="setNewRecord"
+        label="+Add Product"
+      />
     </div>
     <div class="w-3/4">
       <div>

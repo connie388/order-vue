@@ -16,8 +16,8 @@
           label="Customer Name"
           v-model="form.customerName"
         />
-        <!-- </div>
-      <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0"> -->
+      </div>
+      <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
         <BaseInput
           id="orderNumber"
           :disabled="true"
@@ -34,43 +34,57 @@
           @selected="setStatus"
         />
       </div>
-      <!-- </div>
-    <div class="flex flex-wrap -mx-3 mb-2"> -->
+
       <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-        <BaseInput id="orderDate" label="Order Date" v-model="form.orderDate" />
+        <BaseInput
+          id="orderDate"
+          type="date"
+          label="Order Date"
+          v-model="form.orderDate"
+        />
       </div>
       <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
         <BaseInput
+          type="date"
           id="requiredDate"
           label="Required Date"
+          :disabled="!editable"
           v-model="form.requiredDate"
         />
       </div>
       <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
         <BaseInput
+          type="date"
           id="shippedDate"
           label="Shipped Date"
+          :disabled="!editable"
           v-model="form.shippedDate"
         />
       </div>
-      <!-- </div>
 
-    <div class="flex flex-wrap -mx-3 mb-6"> -->
       <div class="w-full px-3">
-        <BaseTextArea id="comments" label="Comments" v-model="form.Comments" />
+        <BaseTextArea id="comments" label="Comments" v-model="form.comments" />
       </div>
     </div>
+
+    <hr />
     <div class="w-full">
       <div class="overflow-auto">
         <div v-if="editable">
-          <BaseTable
+          <BaseEditableTable
+            ref="childRef"
+            :editMode="true"
             :fields="orderDetailFields"
             :dataList="orderDetails"
             :filterEnable="false"
+            :viewEnable="false"
+            :editEnable="false"
+            :addRow="true"
           />
+          <BaseButton @click="onsubmit" label="Submit" />
         </div>
         <div v-else>
-          <BaseTable
+          <BaseViewTable
             :fields="orderDetailFields"
             :dataList="orderDetails"
             :viewEnable="false"
@@ -81,19 +95,32 @@
         </div>
       </div>
     </div>
-    <BaseButton @click="onsubmit" label="Submit" />
   </form>
+
+  <BaseModal
+    :showing="visibleMsgView"
+    modalContainerClass="modal-notify-container"
+    modalContentClass="modal-notify-content"
+    @close="this.visibleMsgView = false"
+  >
+    <template v-slot:body>
+      <p>{{ this.msg }}</p>
+    </template>
+  </BaseModal>
 </template>
 
 <script>
 import BaseErrors from "../layouts/BaseErrors.vue";
+import BaseModal from "../layouts/BaseModal.vue";
 import BaseTextArea from "../layouts/BaseTextArea.vue";
 import BaseButton from "../layouts/BaseButton.vue";
 import BaseDropdown from "../layouts/BaseDropdown.vue";
-import BaseTable from "../layouts/BaseTable.vue";
+import BaseViewTable from "../layouts/BaseViewTable.vue";
+import BaseEditableTable from "../layouts/BaseEditableTable.vue";
 import BaseInput from "../layouts/BaseInput.vue";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 import { ORDER_STATUS } from "@/components/OrderStatus";
+import { ref } from "vue";
 
 export default {
   components: {
@@ -101,9 +128,12 @@ export default {
     BaseTextArea,
     BaseButton,
     BaseDropdown,
-    BaseTable,
+    BaseViewTable,
+    BaseEditableTable,
     BaseInput,
+    BaseModal,
   },
+  emits: ["onSubmit"],
   props: {
     order: {
       type: Object,
@@ -126,21 +156,36 @@ export default {
         shippedDate: null,
         status: "",
         comments: "",
+        orderDetailList: null,
       },
       errors: [],
       options: null,
       orderDetails: [],
+      selectedOrderDetail: null,
+      visibleMsgView: false,
+      visibleOrderDetailEdit: false,
+      msg: "",
     };
   },
 
-  setup() {
+  setup: () => {
     const orderDetailFields = [
-      { column: "orderNumber", header: "Order Number" },
-      { column: "productCode", header: "Product Code" },
-      { column: "quantityOrdered", header: "Quantity" },
-      { column: "priceEach", header: "Price Each" },
+      { column: "productCode", header: "Product Code", type: "text" },
+      { column: "quantityOrdered", header: "Quantity", type: "number" },
+      { column: "priceEach", header: "Price Each", type: "number" },
+      {
+        column: "orderLineNumber",
+        header: "Order Line Number",
+        type: "number",
+      },
     ];
-    return { orderDetailFields };
+
+    const childRef = ref(null);
+    const getTableItems = () => {
+      return childRef.value?.tableItems;
+    };
+
+    return { orderDetailFields, getTableItems, childRef };
   },
 
   created() {
@@ -160,20 +205,20 @@ export default {
             this.options = [
               { key: ORDER_STATUS.IN_PROCESS, text: ORDER_STATUS.IN_PROCESS },
               { key: ORDER_STATUS.SHIPPED, text: ORDER_STATUS.SHIPPED },
-              { Key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
-              { Key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
+              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+              { key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
             ];
           }
           if (this.order.status === ORDER_STATUS.ON_HOLD) {
             this.options = [
               { key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
               { key: ORDER_STATUS.IN_PROCESS, text: ORDER_STATUS.IN_PROCESS },
-              { Key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
             ];
           }
           if (this.order.status == ORDER_STATUS.CANCELLED) {
             this.options = [
-              { Key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
             ];
           }
           if (this.order.status == ORDER_STATUS.DISPUTED) {
@@ -184,8 +229,8 @@ export default {
           }
           if (this.order.status == ORDER_STATUS.RESOLVED) {
             this.options = [
-              { Key: ORDER_STATUS.RESOLVED, text: ORDER_STATUS.RESOLVED },
-              { Key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
+              { key: ORDER_STATUS.RESOLVED, text: ORDER_STATUS.RESOLVED },
+              { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
             ];
           }
           this.form.orderNumber = this.order.orderNumber;
@@ -214,13 +259,12 @@ export default {
 
     retrieveOrderDetail(orderNumber) {
       this.orderDetails = [];
-      createEndpoint(ENDPOINTS.ORDER_DETAIL)
+      createEndpoint(ENDPOINTS.ORDER)
         .fetchById(orderNumber)
         .then((res) => {
-          this.orderDetails = JSON.parse(JSON.stringify(res.data));
+          this.orderDetails = res.data?.orderDetailList;
         })
         .catch((err) => console.log(err));
-      this.reset = !this.reset;
     },
     onsubmit(e) {
       this.errors = [];
@@ -241,9 +285,10 @@ export default {
         return;
       }
 
+      this.form.orderDetailList = this.getTableItems();
       e.preventDefault();
       console.log("this form status = " + this.form.status);
-      this.$emit("onsubmit", this.form);
+      this.$emit("onSubmit", this.form);
     },
   },
 };

@@ -1,43 +1,5 @@
 <template>
-  <div v-if="dataList?.length === 0">
-    <div v-if="showmsg">No data available</div>
-  </div>
-
-  <div v-else>
-    <div v-if="filterEnable">
-      <div class="flex items-center space-x-2">
-        <div class="relative">
-          <span
-            class="relative inline-flex items-center px-3 py-3 space-x-2 text-sm font-medium text-gray-600 rounded-md sm:py-2"
-          >
-            <div>
-              <i class="fa-solid fa-filter fa-lg"></i>
-            </div>
-            <div class="hidden sm:block">Filters:</div>
-          </span>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap justify-between py-3 pl-2">
-        <div
-          class="relative min-w-xs"
-          v-for="field of fields"
-          :key="field.column"
-        >
-          <input
-            v-model="searchString[field.column]"
-            :placeholder="field.header"
-            class="px-6 py-4 text-xs font-medium text-right whitespace-nowrap"
-          />
-          <div
-            class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"
-          >
-            <i class="fa-solid fa-magnifying-glass fa-2xs text-gray-500"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <div>
     <table id="tableComponent" class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
@@ -56,10 +18,10 @@
           <!-- loop through each value of the fields to get the table header -->
           <th
             scope="col"
-            class="px-6 py-3 text-xs font-bold text-right  uppercase"
+            :class="[field.type == 'number' ? 'text-right' : 'text-left']"
+            class="px-6 py-3 text-xs font-bold uppercase"
             v-for="field in fields"
             :key="field.column"
-            @click="setSortColumn(field.column)"
           >
             {{ field.header }}
 
@@ -72,13 +34,7 @@
               class="fa-solid fa-arrow-up"
             ></i>
           </th>
-          <th
-            v-if="viewEnable"
-            scope="col"
-            class="px-6 py-3 text-sm font-bold text-right text-gray-500"
-          >
-            View
-          </th>
+
           <th
             v-if="editEnable"
             scope="col"
@@ -93,10 +49,21 @@
           >
             Delete
           </th>
+          <th
+            v-if="addRow"
+            scope="col"
+            class="px-6 py-3 text-sm font-bold text-right text-gray-500"
+          >
+            <BaseButton
+              className="btn-green"
+              @click="addNewRecord"
+              label="+Add Record"
+            />
+          </th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        <tr v-for="(item, index) in filteredList" :key="index">
+        <tr v-for="(item, index) in tableItems" :key="index">
           <div v-if="checkboxEnable">
             <td class="border py-3 pl-4">
               <div class="flex items-center h-5">
@@ -109,27 +76,32 @@
             </td>
           </div>
           <td
-            class="text-right px-6 py-4 text-xs font-medium text-gray-800 whitespace-nowrap"
+            class="px-6 py-4 text-xs font-medium text-gray-800 whitespace-nowrap"
             v-for="field in fields"
             :key="field.column"
             @click="onclick(item, index)"
           >
-            {{ item[field.column] }}
+            <div v-if="editMode">
+              <BaseInput
+                id="item[field.column]"
+                type="field.type"
+                :className="[
+                  field.type == 'number'
+                    ? 'field-input text-right'
+                    : 'field-input text-left',
+                ]"
+                v-model="item[field.column]"
+              />
+            </div>
+            <div v-else>
+              {{ item[field.column] }}
+            </div>
           </td>
 
           <td
-            v-if="viewEnable"
-            class="px-6 py-4 text-xs font-medium text-right whitespace-nowrap"
-            @click="viewItem(item, index)"
-          >
-            <a class="text-blue-500 hover:text-blue-700" href="#">
-              <i class="fa-solid fa-eye"></i
-            ></a>
-          </td>
-          <td
             v-if="editEnable"
             class="px-6 py-4 text-xs font-medium text-right whitespace-nowrap"
-            @click="editItem(item, index)"
+            @click="editItem(item)"
           >
             <a class="text-green-500 hover:text-green-700" href="#">
               <i class="fa-solid fa-pen-to-square"></i
@@ -138,7 +110,7 @@
           <td
             v-if="deleteEnable"
             class="px-6 py-4 text-xs font-medium text-right whitespace-nowrap"
-            @click="deleteItem(item, index)"
+            @click="removeRecord(item, index)"
           >
             <a class="text-red-500 hover:text-red-700" href="#">
               <i class="fa-solid fa-trash-can"></i
@@ -150,11 +122,25 @@
   </div>
 </template>
 <script>
+import BaseInput from "./BaseInput.vue";
+import BaseButton from "./BaseButton.vue";
+
 export default {
   name: "TableComponent",
   emits: ["onclick", "viewItem", "editItem", "deleteItem"],
+  components: {
+    BaseInput,
+    BaseButton,
+  },
   props: {
-    //
+    editMode: {
+      type: Boolean,
+      default: false,
+    },
+    addRow: {
+      type: Boolean,
+      default: false,
+    },
     viewEnable: {
       type: Boolean,
       default: true,
@@ -177,14 +163,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    reset: {
-      type: Boolean,
-      default: true,
-    },
-    filterEnable: {
-      type: Boolean,
-      default: false,
-    },
     checkboxEnable: {
       type: Boolean,
       default: false,
@@ -195,79 +173,48 @@ export default {
       sortColumn: "",
       order: "ASC",
       searchString: [],
-      currentIndex: -1,
+
+      tableItems: [],
     };
   },
+
   created() {
     // watch the props to fetch the data again
     this.$watch(
-      () => this.reset,
+      () => this.dataList,
       () => {
-        this.currentIndex = -1;
+        this.tableItems = this.dataList?.map((item) => ({
+          ...item,
+          // isEdit: false,
+        }));
       },
       { immediate: true }
     );
   },
+
   methods: {
-    setSortColumn(column) {
-      if (this.sortColumn === column) {
-        this.order = this.order === "ASC" ? "DESC" : "ASC";
-      } else {
-        this.order = "ASC";
-        this.sortColumn = column;
-      }
-    },
-    onclick(item, index) {
-      this.currentIndex = index;
+    onclick(item) {
       this.$emit("onclick", item);
     },
 
-    viewItem(item, index) {
-      this.currentIndex = index;
+    getTableItems() {
+      return this.tableItems;
+    },
+    viewItem(item) {
       this.$emit("viewItem", item);
     },
-    editItem(item, index) {
-      this.currentIndex = index;
+    editItem(item) {
       this.$emit("editItem", item);
     },
-    deleteItem(item, index) {
-      this.currentIndex = index;
+
+    removeRecord(item, index) {
+      this.tableItems = this.tableItems.filter((item, i) => i !== index);
       this.$emit("deleteItem", item);
     },
-  },
-  computed: {
-    filteredList() {
-      var filteredList = this.dataList;
-      for (let i = 0; i < this.fields?.length; i++) {
-        filteredList = this.searchString[this.fields[i]["column"]]
-          ? filteredList.filter((wo) => {
-              let str = "" + wo[this.fields[i]["column"]];
-              return str.includes(this.searchString[this.fields[i]["column"]]);
-            })
-          : filteredList;
-      }
-      const column = this.sortColumn;
-      const order = this.order;
 
-      filteredList.sort(function (a, b) {
-        var nameA = a[column] + "".toUpperCase();
-        var nameB = b[column] + "".toUpperCase();
-        if (order === "DESC" && nameA > nameB) {
-          return -1;
-        }
-        if (order === "DESC" && nameA < nameB) {
-          return 1;
-        }
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-        return 0;
-      });
-
-      return filteredList;
+    addNewRecord() {
+      const newRow = this.fields.reduce((a) => ({ ...a }), {});
+      this.tableItems?.unshift(newRow);
     },
   },
 };

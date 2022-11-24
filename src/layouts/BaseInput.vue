@@ -10,6 +10,7 @@
     :class="inputClassName"
     :placeholder="placeholder"
     :disabled="disabled"
+    :step="step"
   />
 </template>
 
@@ -17,6 +18,9 @@
 export default {
   name: "BaseInput",
   props: {
+    step: {
+      type: Number,
+    },
     labelClass: {
       type: String,
       default: "field-label",

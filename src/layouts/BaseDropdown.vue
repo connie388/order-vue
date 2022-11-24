@@ -40,7 +40,7 @@ export default {
     },
     className: {
       type: String,
-      default: "field",
+      default: "field-input",
     },
   },
   data() {
@@ -50,7 +50,6 @@ export default {
   },
   created() {
     this.selectedOption = this.initialOption;
-    console.log(this.selectedOption?.text);
   },
   methods: {
     onchange() {

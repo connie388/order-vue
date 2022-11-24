@@ -2,7 +2,6 @@
   <Transition name="fade">
     <div v-if="showing" :class="modalContainerClass">
       <div :class="modalContentClass">
-        <!-- <slot /> -->
         <header
           class="px-4 py-6 flex justify-between items-center border-b-2 border-white"
           id="modalTitle"
@@ -18,23 +17,23 @@
           <slot name="body"></slot>
         </main>
 
-        <footer class="px-4 py-6 border-t-2 border-white">
+        <!-- <footer class="px-4 py-6 border-t-2 border-white">
           <slot name="footer"></slot>
           <BaseButton @click.prevent="close" label="Close" />
-        </footer>
+        </footer> -->
       </div>
     </div>
   </Transition>
 </template>
 
 <script>
-import BaseButton from "./BaseButton";
+// import BaseButton from "./BaseButton";
 export default {
   name: "BaseModal",
-
-  components: {
-    BaseButton,
-  },
+  emits: ["close"],
+  // components: {
+  //   BaseButton,
+  // },
   methods: {
     close() {
       this.$emit("close");
