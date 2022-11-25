@@ -1,15 +1,14 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:8080/thezone/";
-// export const options = {
-//   headers: { "content-type": "application/json" },
-// };
+
 export const ENDPOINTS = {
   CUSTOMER: "customer",
   ORDER: "order",
   PRODUCTLINE: "productline",
   PRODUCT: "product",
   ORDER_CUSTOMER: "order/customer",
+  PAYMENT: "payment",
 };
 export const createEndpoint = (endpoint) => {
   let url = BASE_URL + endpoint + "/";
@@ -21,14 +20,41 @@ export const createEndpoint = (endpoint) => {
     delete: (id) => axios.delete(url + id),
   };
   switch (endpoint) {
-    // case ENDPOINTS.ORDER_DETAIL:
-    //   api = {
-    //     fetchById: (id) => axios.get(url + id),
-    //     deleteByIds: (id, code) => axios.delete(url + id + "/" + code),
-    //     update: (id, code, updateRecord) =>
-    //       axios.put(url + id + "/" + code, updateRecord),
-    //   };
-    //   break;
+    case ENDPOINTS.PAYMENT:
+      api = {
+        fetchByCustomerAndDateRange: (
+          customerNo,
+          fromDate,
+          toDate,
+          checkNumber
+        ) =>
+          axios.get(
+            BASE_URL +
+              customerNo +
+              "/" +
+              endpoint +
+              (fromDate || toDate
+                ? "?" +
+                  (fromDate ? `fromDate=${fromDate}` : "") +
+                  (fromDate && toDate ? "&" : "") +
+                  (toDate ? `toDate=${toDate}` : "")
+                : "") +
+              (fromDate || toDate
+                ? checkNumber
+                  ? `&checkNumber=${checkNumber}`
+                  : ""
+                : checkNumber
+                ? `?checkNumber=${checkNumber}`
+                : "")
+          ),
+        create: (newRecord) => axios.post(url, newRecord),
+        update: (customerNo, checkNumber, updateRecord) =>
+          axios.put(url + customerNo + "/" + checkNumber, updateRecord),
+        delete: (customerNo, checkNumber) =>
+          axios.delete(url + customerNo + "/" + checkNumber),
+      };
+
+      break;
     case ENDPOINTS.ORDER_CUSTOMER:
       api = {
         fetchByNameAndDateRange: (name, fromDate, toDate) =>

@@ -235,7 +235,6 @@ export default {
       this.$emit("editItem", item);
     },
     deleteItem(item, index) {
-      console.log("delete item = " + item.orderNumber + "|" + item.productCode);
       this.currentIndex = index;
       this.$emit("deleteItem", item);
     },

@@ -169,6 +169,7 @@ export default {
     },
     retrieveOrdersByNameAndDateRange() {
       this.orders = [];
+
       createEndpoint(ENDPOINTS.ORDER_CUSTOMER)
         .fetchByNameAndDateRange(
           this.searchCustomerName,

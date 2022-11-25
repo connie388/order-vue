@@ -56,6 +56,13 @@
           to="/order"
           >Order</router-link
         >
+        <router-link
+          @click="setClick('/payment')"
+          :class="{ active: currentLink === '/payment' }"
+          class="text-gray-100 hover:text-indigo-400"
+          to="/payment"
+          >Payment</router-link
+        >
       </ul>
     </nav>
   </div>
