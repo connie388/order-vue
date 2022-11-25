@@ -287,7 +287,6 @@ export default {
 
       this.form.orderDetailList = this.getTableItems();
       e.preventDefault();
-      console.log("this form status = " + this.form.status);
       this.$emit("onSubmit", this.form);
     },
   },

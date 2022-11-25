@@ -80,7 +80,6 @@ export default {
       () => this.payment,
       () => {
         if (this.payment) {
-          console.log(this.payment);
           this.form.customerNumber = this.payment.customerNumber;
           this.form.checkNumber = this.payment.checkNumber;
           this.form.paymentDate = this.payment.paymentDate;
