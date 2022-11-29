@@ -44,9 +44,9 @@
     />
 
     <BaseTextArea
-      id="productDesc"
+      id="productDescription"
       label="Product Description"
-      v-model="form.productDesc"
+      v-model="form.productDescription"
     />
 
     <BaseInput
@@ -87,7 +87,7 @@ export default {
         productName: "",
         productScale: "",
         productVendor: "",
-        productDesc: "",
+        productDescription: "",
         buyPrice: null,
         quantityInStock: null,
         msrp: null,
@@ -127,7 +127,7 @@ export default {
       if (!this.form.productVendor) {
         this.errors.push("Product Vendor required.");
       }
-      if (!this.form.productDesc) {
+      if (!this.form.productDescription) {
         this.errors.push("Product Description required.");
       }
       if (!this.form.buyPrice) {
@@ -172,7 +172,7 @@ export default {
           this.form.productName = res.data.productName;
           this.form.productScale = res.data.productScale;
           this.form.productVendor = res.data.productVendor;
-          this.form.productDesc = res.data.productDesc;
+          this.form.productDescription = res.data.productDescription;
           this.form.buyPrice = res.data.buyPrice;
           this.form.quantityInStock = res.data.quantityInStock;
           this.form.msrp = res.data.msrp;

@@ -15,15 +15,15 @@
     />
 
     <BaseTextArea
-      id="textDesc"
+      id="textDescription"
       label="Text Description"
-      v-model="form.textDesc"
+      v-model="form.textDescription"
     />
 
     <BaseTextArea
-      id="htmlDesc"
+      id="htmlDescription"
       label="HTML Description"
-      v-model="form.htmlDesc"
+      v-model="form.htmlDescription"
     />
 
     <BaseInput id="image" label="Image URL" v-model="form.imageUrl"/>
@@ -51,8 +51,8 @@ export default {
     return {
       form: {
         productLine: null,
-        textDesc: "",
-        htmlDesc: "",
+        textDescription: "",
+        htmlDescription: "",
         imageUrl: "",
       },
       errors: [],
@@ -90,8 +90,8 @@ export default {
         .fetchById(this.pline)
         .then((res) => {
           this.form.productLine = res.data.productLine;
-          this.form.textDesc = res.data.textDesc;
-          this.form.htmlDesc = res.data.htmlDesc;
+          this.form.textDescription = res.data.textDescription;
+          this.form.htmlDescription = res.data.htmlDescription;
           this.form.imageUrl = res.data.imageUrl;
         })
         .catch((err) => console.log(err));

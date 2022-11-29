@@ -110,8 +110,8 @@ export default {
     updateProductLineData(form) {
       var data = {
         productLine: form.productLine,
-        textDesc: form.textDesc,
-        htmlDesc: form.htmlDesc,
+        textDescription: form.textDescription,
+        htmlDescription: form.htmlDescription,
         imageUrl: form.imageUrl,
       };
       createEndpoint(ENDPOINTS.PRODUCTLINE)
@@ -126,8 +126,8 @@ export default {
     addProductLineData(form) {
       var data = {
         productLine: form.productLine,
-        textDesc: form.textDesc,
-        htmlDesc: form.htmlDesc,
+        textDescription: form.textDescription,
+        htmlDescription: form.htmlDescription,
         imageUrl: form.imageUrl,
       };
 

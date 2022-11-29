@@ -112,11 +112,15 @@ export default {
     },
 
     searchByProductLine(option) {
-      this.products = [];
       this.searchProductLine = option.key;
+      this.findByProductLine();
+    },
+
+    findByProductLine() {
+      this.products = [];
       this.reset = !this.reset;
       createEndpoint(ENDPOINTS.PRODUCT)
-        .fetchAllByCategory(option.key)
+        .fetchAllByCategory(this.searchProductLine)
         .then((res) => {
           for (let record in res.data) {
             var tempProduct = {
@@ -136,8 +140,7 @@ export default {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
           this.currentProductCode = null;
-          if (this.searchProductLine)
-            this.searchByProductLine(this.searchProductLine);
+          if (this.searchProductLine) this.findByProductLine();
         })
         .catch((err) => console.log(err));
     },
@@ -149,7 +152,7 @@ export default {
         productName: form.productName,
         productScale: form.productScale,
         productVendor: form.productVendor,
-        productDesc: form.productDesc,
+        productDescription: form.productDescription,
         quantityInStock: form.quantityInStock,
         buyPrice: form.buyPrice,
         msrp: form.msrp,
@@ -170,7 +173,7 @@ export default {
         productName: form.productName,
         productScale: form.productScale,
         productVendor: form.productVendor,
-        productDesc: form.productDesc,
+        productDescription: form.productDescription,
         quantityInStock: form.quantityInStock,
         buyPrice: form.buyPrice,
         msrp: form.msrp,
@@ -180,8 +183,7 @@ export default {
         .create(data)
         .then((res) => {
           console.log(res.data);
-          if (this.searchProductLine)
-            this.searchByProductLine(this.searchProductLine);
+          if (this.searchProductLine) this.findByProductLine();
           this.msg = "Record added successfully!";
           this.newRecord = false;
         })
