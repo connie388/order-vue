@@ -20,7 +20,7 @@ export default {
       default: "",
     },
     info: {
-      type: String,
+      type: [String, Number],
       default: "",
     },
     className: {

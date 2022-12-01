@@ -18,7 +18,7 @@
           <!-- loop through each value of the fields to get the table header -->
           <th
             scope="col"
-            :class="[field.type == 'number' ? 'text-right' : 'text-left']"
+            :class="field.type == 'number' ? 'text-right' : 'text-left'"
             class="px-6 py-3 text-xs font-bold uppercase"
             v-for="field in fields"
             :key="field.column"
@@ -85,11 +85,11 @@
               <BaseInput
                 id="item[field.column]"
                 type="field.type"
-                :className="[
+                :className="
                   field.type == 'number'
                     ? 'field-input text-right'
-                    : 'field-input text-left',
-                ]"
+                    : 'field-input text-left'
+                "
                 v-model="item[field.column]"
               />
             </div>
