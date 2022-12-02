@@ -15,12 +15,6 @@
       </div>
 
       <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-        <!-- <BaseDropdown
-          id="status"
-          :options="options"
-          label="Status"
-          @selected="setStatus"
-        /> -->
         <BaseLabel id="status" label="Status" :info="form.status" />
       </div>
 
@@ -71,22 +65,10 @@
       </div>
     </div>
   </form>
-
-  <BaseModal
-    :showing="visibleMsgView"
-    modalContainerClass="modal-notify-container"
-    modalContentClass="modal-notify-content"
-    @close="this.visibleMsgView = false"
-  >
-    <template v-slot:body>
-      <p>{{ this.msg }}</p>
-    </template>
-  </BaseModal>
 </template>
 
 <script>
 import BaseErrors from "../layouts/BaseErrors.vue";
-import BaseModal from "../layouts/BaseModal.vue";
 import BaseTextArea from "../layouts/BaseTextArea.vue";
 import BaseButton from "../layouts/BaseButton.vue";
 import BaseLabel from "../layouts/BaseLabel.vue";
@@ -106,7 +88,6 @@ export default {
     BaseLabel,
     BaseEditableTable,
     BaseInput,
-    BaseModal,
   },
   emits: ["onSubmit"],
   props: {
@@ -132,9 +113,6 @@ export default {
         orderDetailList: null,
       },
       errors: [],
-
-      visibleMsgView: false,
-      msg: "",
     };
   },
 

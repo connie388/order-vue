@@ -96,22 +96,10 @@
       </div>
     </div>
   </form>
-
-  <BaseModal
-    :showing="visibleMsgView"
-    modalContainerClass="modal-notify-container"
-    modalContentClass="modal-notify-content"
-    @close="this.visibleMsgView = false"
-  >
-    <template v-slot:body>
-      <p>{{ this.msg }}</p>
-    </template>
-  </BaseModal>
 </template>
 
 <script>
 import BaseErrors from "../layouts/BaseErrors.vue";
-import BaseModal from "../layouts/BaseModal.vue";
 import BaseTextArea from "../layouts/BaseTextArea.vue";
 import BaseButton from "../layouts/BaseButton.vue";
 import BaseDropdown from "../layouts/BaseDropdown.vue";
@@ -131,7 +119,6 @@ export default {
     BaseViewTable,
     BaseEditableTable,
     BaseInput,
-    BaseModal,
   },
   emits: ["onSubmit"],
   props: {
@@ -162,9 +149,7 @@ export default {
       options: null,
       orderDetails: [],
       selectedOrderDetail: null,
-      visibleMsgView: false,
       visibleOrderDetailEdit: false,
-      msg: "",
     };
   },
 

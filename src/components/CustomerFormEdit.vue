@@ -131,7 +131,7 @@ export default {
         state: "",
         country: "",
         postalCode: "",
-        salesRepEmployeeNumber: "",
+        salesRepEmployeeNumber: null,
         creditLimit: null,
       },
       errors: [],
