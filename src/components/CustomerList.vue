@@ -37,7 +37,10 @@
     >
 
     <template v-slot:body>
-      <CustomerFormEdit @onsubmit="addCustomerData" />
+      <CustomerFormEdit
+        @onsubmit="addCustomerData"
+        @onClose="this.visibleCustomerAdd = false"
+      />
     </template>
   </BaseModal>
 
@@ -55,6 +58,7 @@
       <CustomerFormEdit
         :customer="selectedCustomer"
         @onsubmit="updateCustomerData"
+        @onClose="this.visibleCustomerView = false"
       />
     </template>
   </BaseModal>

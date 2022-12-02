@@ -13,9 +13,17 @@
       />
     </div>
     <div class="w-3/4">
-      <div>
-        <p>{{ msg }}</p>
-      </div>
+      <BaseModal
+        :showing="visibleMsgView"
+        modalContainerClass="modal-notify-container"
+        modalContentClass="modal-notify-content"
+        :closeButtonEnable="true"
+        @close="this.visibleMsgView = false"
+      >
+        <template v-slot:body>
+          <p>{{ msg }}</p>
+        </template>
+      </BaseModal>
       <div v-if="newRecord">
         <BaseHeader label="New Product Line" />
         <ProductLineForm @onsubmit="addProductLineData" />
@@ -45,12 +53,14 @@ import BaseHeader from "../layouts/BaseHeader.vue";
 import BaseButton from "../layouts/BaseButton.vue";
 import ProductLineForm from "./ProductLineForm";
 import BaseList from "../layouts/BaseList.vue";
+import BaseModal from "../layouts/BaseModal.vue";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 export default {
   components: {
     BaseHeader,
     BaseButton,
     BaseList,
+    BaseModal,
     ProductLineForm,
   },
   data() {
@@ -58,6 +68,7 @@ export default {
       productlines: [],
       currentProductLine: null,
       newRecord: false,
+      visibleMsgView: false,
       msg: "Please click on a Product Line to view, update or delete",
     };
   },
@@ -70,12 +81,14 @@ export default {
     setActiveProductLine(option) {
       this.currentProductLine = option.key;
       this.msg = "";
+      this.visibleMsgView = false;
       this.newRecord = false;
     },
 
     setNewRecord() {
       this.newRecord = true;
       this.msg = "";
+      this.visibleMsgView = false;
       this.currentProductLine = null;
     },
 
@@ -101,6 +114,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
+          this.visibleMsgView = true;
           this.currentProductLine = null;
           this.retrieveProductLines();
         })
@@ -119,6 +133,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.msg = "Record updated successfully!";
+          this.visibleMsgView = true;
         })
         .catch((err) => console.log(err));
     },
@@ -137,6 +152,7 @@ export default {
           console.log(res.data);
           this.retrieveProductLines();
           this.msg = "Record added successfully!";
+          this.visibleMsgView = true;
           this.newRecord = false;
         })
         .catch((err) => console.log(err));

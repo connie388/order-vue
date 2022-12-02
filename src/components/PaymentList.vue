@@ -68,6 +68,7 @@
       <PaymentFormEdit
         :edit="false"
         :customerList="customerList"
+        @onClose="this.visiblePaymentAdd = false"
         @onSubmit="addPayment"
       />
     </template>
@@ -89,6 +90,7 @@
         :payment="selectedPayment"
         :customerName="searchCustomerName"
         :edit="true"
+        @onClose="this.visiblePaymentEdit = false"
         @onSubmit="updatePayment"
       />
     </template>

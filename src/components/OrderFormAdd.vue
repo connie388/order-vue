@@ -61,7 +61,8 @@
           :editEnable="false"
           :addRow="true"
         />
-        <BaseButton @click="onsubmit" label="Submit" />
+        <BaseButton @click="onsubmit" label="Submit" class="mr-2" />
+        <BaseButton @click="onclose" label="Close" />
       </div>
     </div>
   </form>
@@ -89,7 +90,7 @@ export default {
     BaseEditableTable,
     BaseInput,
   },
-  emits: ["onSubmit"],
+  emits: ["onSubmit", "onClose"],
   props: {
     order: {
       type: Object,
@@ -149,6 +150,9 @@ export default {
   },
 
   methods: {
+    onclose() {
+      this.$emit("onClose");
+    },
     setStatus(option) {
       this.form.status = option.key;
     },

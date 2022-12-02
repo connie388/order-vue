@@ -81,7 +81,8 @@
             :editEnable="false"
             :addRow="true"
           />
-          <BaseButton @click="onsubmit" label="Submit" />
+          <BaseButton @click="onsubmit" label="Submit" class="mr-2" />
+          <BaseButton @click="onclose" label="Close" />
         </div>
         <div v-else>
           <BaseViewTable
@@ -92,6 +93,7 @@
             :deleteEnable="false"
             :filterEnable="false"
           />
+          <BaseButton @click="onclose" label="Close" />
         </div>
       </div>
     </div>
@@ -120,7 +122,7 @@ export default {
     BaseEditableTable,
     BaseInput,
   },
-  emits: ["onSubmit"],
+  emits: ["onSubmit", "onClose"],
   props: {
     order: {
       type: Object,
@@ -251,6 +253,10 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    onclose() {
+      this.$emit("onClose");
+    },
+
     onsubmit(e) {
       this.errors = [];
       if (!this.form.orderDate) {

@@ -27,7 +27,8 @@
 
     <BaseInput id="amount" type="number" label="Amount" v-model="form.amount" />
 
-    <BaseButton @click="onsubmit" label="Submit" />
+    <BaseButton @click="onsubmit" label="Submit" class="mr-2" />
+    <BaseButton @click="onclose" label="Close" />
   </form>
 </template>
 <script>
@@ -38,7 +39,7 @@ import BaseErrors from "../layouts/BaseErrors.vue";
 import BaseDropdown from "../layouts/BaseDropdown.vue";
 
 export default {
-  emits: ["onSubmit"],
+  emits: ["onSubmit", "onClose"],
   components: {
     BaseInput,
     BaseButton,
@@ -93,6 +94,9 @@ export default {
   },
 
   methods: {
+    onclose() {
+      this.$emit("onClose");
+    },
     setCustomerNumber(option) {
       this.form.customerNumber = option.key;
     },

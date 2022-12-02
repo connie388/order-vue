@@ -23,9 +23,17 @@
       />
     </div>
     <div class="w-3/4">
-      <div>
-        <p>{{ msg }}</p>
-      </div>
+      <BaseModal
+        :showing="visibleMsgView"
+        modalContainerClass="modal-notify-container"
+        modalContentClass="modal-notify-content"
+        :closeButtonEnable="true"
+        @close="this.visibleMsgView = false"
+      >
+        <template v-slot:body>
+          <p>{{ msg }}</p>
+        </template>
+      </BaseModal>
       <div v-if="newRecord">
         <BaseHeader label="New Product" />
         <ProductForm :productlines="productlines" @onsubmit="addProductData" />
@@ -54,6 +62,7 @@
 <script>
 import BaseHeader from "../layouts/BaseHeader.vue";
 import BaseButton from "../layouts/BaseButton.vue";
+import BaseModal from "../layouts/BaseModal.vue";
 import BaseDropdown from "../layouts/BaseDropdown.vue";
 import BaseList from "../layouts/BaseList.vue";
 import ProductForm from "./ProductForm";
@@ -64,6 +73,7 @@ export default {
     BaseButton,
     BaseDropdown,
     BaseList,
+    BaseModal,
     ProductForm,
   },
   data() {
@@ -74,6 +84,7 @@ export default {
       newRecord: false,
       searchProductLine: "",
       reset: false,
+      visibleMsgView: false,
       msg: "Please click on a Product to view, update or delete",
     };
   },
@@ -86,6 +97,7 @@ export default {
       this.currentProductCode = option.key;
       this.msg = "";
       this.newRecord = false;
+      this.visibleMsgView = false;
     },
 
     retrieveProductLines() {
@@ -107,6 +119,7 @@ export default {
     setNewRecord() {
       this.newRecord = true;
       this.msg = "";
+      this.visibleMsgView = false;
       this.currentProductCode = null;
       this.currentIndex = -1;
     },
@@ -139,6 +152,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.msg = "Record deleted successfully!";
+          this.visibleMsgView = true;
           this.currentProductCode = null;
           if (this.searchProductLine) this.findByProductLine();
         })
@@ -162,6 +176,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.msg = "Record updated successfully!";
+          this.visibleMsgView = true;
         })
         .catch((err) => console.log(err));
     },
@@ -185,6 +200,7 @@ export default {
           console.log(res.data);
           if (this.searchProductLine) this.findByProductLine();
           this.msg = "Record added successfully!";
+          this.visibleMsgView = true;
           this.newRecord = false;
         })
         .catch((err) => console.log(err));

@@ -90,7 +90,8 @@
         />
       </div>
     </div>
-    <BaseButton @click="onsubmit" label="Submit" />
+    <BaseButton @click="onsubmit" label="Submit" class="mr-2" />
+    <BaseButton @click="onclose" label="Close" />
   </form>
 </template>
 <script>
@@ -100,7 +101,7 @@ import BaseTextArea from "../layouts/BaseTextArea.vue";
 import BaseErrors from "../layouts/BaseErrors.vue";
 
 export default {
-  emits: ["onsubmit"],
+  emits: ["onsubmit", "onClose"],
   components: {
     BaseInput,
     BaseButton,
@@ -167,6 +168,9 @@ export default {
   },
 
   methods: {
+    onclose() {
+      this.$emit("onClose");
+    },
     onsubmit(e) {
       this.errors = [];
       if (!this.form.customerName) {
