@@ -27,7 +27,7 @@
       </div>
       <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
         <BaseDropdown
-          :initialOption="{ key: order.status, text: order.status }"
+          :initialOption="initialOption"
           id="status"
           :options="options"
           label="Status"
@@ -153,6 +153,7 @@ export default {
       orderDetails: [],
       selectedOrderDetail: null,
       visibleOrderDetailEdit: false,
+      initialOption: null,
     };
   },
 
@@ -182,45 +183,7 @@ export default {
       () => this.order,
       () => {
         if (this.order) {
-          if (this.order.status === ORDER_STATUS.SHIPPED) {
-            this.options = [
-              { key: ORDER_STATUS.SHIPPED, text: ORDER_STATUS.SHIPPED },
-              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
-              { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
-            ];
-          }
-          if (this.order.status === ORDER_STATUS.IN_PROCESS) {
-            this.options = [
-              { key: ORDER_STATUS.IN_PROCESS, text: ORDER_STATUS.IN_PROCESS },
-              { key: ORDER_STATUS.SHIPPED, text: ORDER_STATUS.SHIPPED },
-              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
-              { key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
-            ];
-          }
-          if (this.order.status === ORDER_STATUS.ON_HOLD) {
-            this.options = [
-              { key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
-              { key: ORDER_STATUS.IN_PROCESS, text: ORDER_STATUS.IN_PROCESS },
-              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
-            ];
-          }
-          if (this.order.status == ORDER_STATUS.CANCELLED) {
-            this.options = [
-              { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
-            ];
-          }
-          if (this.order.status == ORDER_STATUS.DISPUTED) {
-            this.options = [
-              { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
-              { key: ORDER_STATUS.RESOLVED, text: ORDER_STATUS.RESOLVED },
-            ];
-          }
-          if (this.order.status == ORDER_STATUS.RESOLVED) {
-            this.options = [
-              { key: ORDER_STATUS.RESOLVED, text: ORDER_STATUS.RESOLVED },
-              { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
-            ];
-          }
+          this.setOptions(this.order.status);
           this.form.orderNumber = this.order.orderNumber;
           this.form.orderDate = this.order.orderDate;
           this.form.requiredDate = this.order.requiredDate;
@@ -229,7 +192,6 @@ export default {
           this.form.comments = this.order.comments;
           this.form.customerNumber = this.order.customerNumber;
           this.form.customerName = this.order.customerName;
-          // console.log("name=" + this.order.customerName);
         }
         if (this.order["orderNumber"])
           this.retrieveOrderDetail(this.order["orderNumber"]);
@@ -241,8 +203,52 @@ export default {
   },
 
   methods: {
+    setOptions(status) {
+      if (status === ORDER_STATUS.SHIPPED) {
+        this.options = [
+          { key: ORDER_STATUS.SHIPPED, text: ORDER_STATUS.SHIPPED },
+          { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+          { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
+        ];
+      }
+      if (status === ORDER_STATUS.IN_PROCESS) {
+        this.options = [
+          { key: ORDER_STATUS.IN_PROCESS, text: ORDER_STATUS.IN_PROCESS },
+          { key: ORDER_STATUS.SHIPPED, text: ORDER_STATUS.SHIPPED },
+          { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+          { key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
+        ];
+      }
+      if (status === ORDER_STATUS.ON_HOLD) {
+        this.options = [
+          { key: ORDER_STATUS.ON_HOLD, text: ORDER_STATUS.ON_HOLD },
+          { key: ORDER_STATUS.IN_PROCESS, text: ORDER_STATUS.IN_PROCESS },
+          { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+        ];
+      }
+      if (status == ORDER_STATUS.CANCELLED) {
+        this.options = [
+          { key: ORDER_STATUS.CANCELLED, text: ORDER_STATUS.CANCELLED },
+        ];
+      }
+      if (status == ORDER_STATUS.DISPUTED) {
+        this.options = [
+          { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
+          { key: ORDER_STATUS.RESOLVED, text: ORDER_STATUS.RESOLVED },
+        ];
+      }
+      if (status == ORDER_STATUS.RESOLVED) {
+        this.options = [
+          { key: ORDER_STATUS.RESOLVED, text: ORDER_STATUS.RESOLVED },
+          { key: ORDER_STATUS.DISPUTED, text: ORDER_STATUS.DISPUTED },
+        ];
+      }
+      this.initialOption = { key: status, text: status };
+    },
+
     setStatus(option) {
       this.form.status = option.key;
+      this.initialOption = { key: option.key, text: option.key };
     },
 
     retrieveOrderDetail(orderNumber) {
