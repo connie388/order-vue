@@ -98,17 +98,11 @@
     <!-- <template v-slot:footer> <BaseButton label="Add" /></template> -->
   </BaseModal>
 
-  <BaseModal
-    :showing="visibleMsgView"
-    modalContainerClass="modal-notify-container"
-    modalContentClass="modal-notify-content"
-    :closeButtonEnable="true"
+  <NotificationModal
+    :show="visibleMsgView"
+    :msg="msg"
     @close="this.visibleMsgView = false"
-  >
-    <template v-slot:body>
-      <p>{{ this.msg }}</p>
-    </template>
-  </BaseModal>
+  />
 </template>
 
 <script>
@@ -118,6 +112,7 @@ import BaseInput from "../layouts/BaseInput.vue";
 import BaseDropdown from "../layouts/BaseDropdown.vue";
 import BaseViewTable from "../layouts/BaseViewTable.vue";
 import BaseModal from "../layouts/BaseModal";
+import NotificationModal from "./NotificationModal.vue";
 import PaymentFormEdit from "./PaymentFormEdit";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 
@@ -129,6 +124,7 @@ export default {
     BaseDropdown,
     BaseErrors,
     BaseModal,
+    NotificationModal,
     PaymentFormEdit,
   },
   data() {

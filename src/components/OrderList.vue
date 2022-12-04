@@ -90,17 +90,11 @@
     <!-- <template v-slot:footer> <BaseButton label="Add" /></template> -->
   </BaseModal>
 
-  <BaseModal
-    :showing="visibleMsgView"
-    modalContainerClass="modal-notify-container"
-    modalContentClass="modal-notify-content"
-    :closeButtonEnable="true"
+  <NotificationModal
+    :show="visibleMsgView"
+    :msg="msg"
     @close="this.visibleMsgView = false"
-  >
-    <template v-slot:body>
-      <p>{{ this.msg }}</p>
-    </template>
-  </BaseModal>
+  />
 </template>
 
 <script>
@@ -108,6 +102,7 @@ import BaseButton from "../layouts/BaseButton.vue";
 import BaseInput from "../layouts/BaseInput.vue";
 import BaseViewTable from "../layouts/BaseViewTable.vue";
 import BaseModal from "../layouts/BaseModal";
+import NotificationModal from "./NotificationModal.vue";
 import OrderFormEdit from "./OrderFormEdit";
 import OrderFormAdd from "./OrderFormAdd";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
@@ -117,6 +112,7 @@ export default {
     BaseButton,
     BaseInput,
     BaseViewTable,
+    NotificationModal,
     BaseModal,
     OrderFormEdit,
     OrderFormAdd,
@@ -153,12 +149,11 @@ export default {
   },
 
   methods: {
- 
     editOrder(item) {
       this.selectedOrder = item;
       this.visibleOrderEdit = true;
     },
-  
+
     retrieveOrdersByNameAndDateRange() {
       this.orders = [];
 

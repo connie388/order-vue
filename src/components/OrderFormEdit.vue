@@ -93,6 +93,7 @@
             :deleteEnable="false"
             :filterEnable="false"
           />
+          <BaseButton @click="onsubmit" label="Submit" class="mr-2" />
           <BaseButton @click="onclose" label="Close" />
         </div>
       </div>

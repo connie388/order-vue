@@ -13,17 +13,11 @@
       />
     </div>
     <div class="w-3/4">
-      <BaseModal
-        :showing="visibleMsgView"
-        modalContainerClass="modal-notify-container"
-        modalContentClass="modal-notify-content"
-        :closeButtonEnable="true"
+      <NotificationModal
+        :show="visibleMsgView"
+        :msg="msg"
         @close="this.visibleMsgView = false"
-      >
-        <template v-slot:body>
-          <p>{{ msg }}</p>
-        </template>
-      </BaseModal>
+      />
       <div v-if="newRecord">
         <BaseHeader label="New Product Line" />
         <ProductLineForm @onsubmit="addProductLineData" />
@@ -53,14 +47,14 @@ import BaseHeader from "../layouts/BaseHeader.vue";
 import BaseButton from "../layouts/BaseButton.vue";
 import ProductLineForm from "./ProductLineForm";
 import BaseList from "../layouts/BaseList.vue";
-import BaseModal from "../layouts/BaseModal.vue";
+import NotificationModal from "./NotificationModal.vue";
 import { createEndpoint, ENDPOINTS } from "@/services/CreateEndPoint";
 export default {
   components: {
     BaseHeader,
     BaseButton,
     BaseList,
-    BaseModal,
+    NotificationModal,
     ProductLineForm,
   },
   data() {
