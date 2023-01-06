@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL =
+  process.env.VUE_APP_END_POINT ||
   "https://order-express-mysql-server-production.up.railway.app/thezone/";
 
 export const ENDPOINTS = {

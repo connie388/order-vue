@@ -3,6 +3,11 @@ import PageNotFound from "@/views/PageNotFound.vue";
 
 const routes = [
   {
+    path: "/",
+    name: "HomePage",
+    component: () => import("../components/HomePage.vue"),
+  },
+  {
     path: "/customer",
     name: "CustomerList",
     component: () => import("../components/CustomerList.vue"),
@@ -35,7 +40,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.VUE_APP_BASE_URL),
   routes,
 });
 
