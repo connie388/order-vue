@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkorder_vue"]=self["webpackChunkorder_vue"]||[]).push([[779],{4779:function(e,r,n){n.r(r),n.d(r,{default:function(){return d}});var u=n(6252);const t=(0,u._)("h1",null,"Welcome to Order Application",-1),c=[t];function o(e,r){return(0,u.wg)(),(0,u.iD)("div",null,c)}var l=n(3744);const i={},a=(0,l.Z)(i,[["render",o]]);var d=a}}]);
+//# sourceMappingURL=779.a83eb5f8.js.map
