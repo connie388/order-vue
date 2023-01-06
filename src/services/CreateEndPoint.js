@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/thezone/";
+const BASE_URL =
+  "https://order-express-mysql-server-production.up.railway.app/thezone/";
 
 export const ENDPOINTS = {
   CUSTOMER: "customer",
